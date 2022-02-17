@@ -69,6 +69,10 @@ public:
 	*/
 	virtual void Draw(glm::mat4 &viewMatrix, glm::mat4 &projMatrix);
 
+	void SetMass(float _mass) { mass = _mass; }
+
+	float GetMass() { return mass; }
+
 protected:
 
 	/** The model geometry
@@ -98,6 +102,8 @@ protected:
 	* The model matrix must be built from the scale of the model geometry
 	*/
 	glm::vec3 _scale;
+
+	float mass;
 
 };
 

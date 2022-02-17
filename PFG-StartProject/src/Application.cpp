@@ -179,7 +179,7 @@ bool Application::Update()
 		//caps framerate
 		if (deltaTime < (1.0f / 70.0f))
 		{
-			//SDL_Delay((unsigned int)(((1.0f / 60.0f) - deltaTime) * 1000.0f));
+			SDL_Delay((unsigned int)(((1.0f / 60.0f) - deltaTime) * 1000.0f));
 			//SDL_Delay(((1.0f / 70.0f) - deltaTime) * 1000);
 		}
 		lastTime = currentTime;

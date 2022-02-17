@@ -16,8 +16,12 @@ Scene::Scene()
 	// Position of the light, in world-space
 	_lightPosition = glm::vec3(10, 10, 0);
 
+	//Temp variable for Exercise 5: Une kinematics equations to compute the physics
+	_v_i = glm::vec3(0.0f, 0.5f, 0.0f);
+
 	// Create a game object
 	_physics_object = new GameObject();
+	_physics_object2 = new GameObject();
 	// Create a game level object
 	_level = new GameObject();
 
@@ -66,6 +70,7 @@ Scene::Scene()
 	objectMaterial->SetLightPosition(_lightPosition);
 	// Tell the level object to use this material
 	_physics_object->SetMaterial(objectMaterial);
+	_physics_object2->SetMaterial(objectMaterial);
 
 	// Set the geometry for the object
 	Mesh *modelMesh = new Mesh();
@@ -76,13 +81,17 @@ Scene::Scene()
 	_physics_object->SetPosition(0.0f, 5.0f, 0.0f);
 	_physics_object->SetScale(0.3f, 0.3f, 0.3f);
 
-	
+	_physics_object2->SetMesh(modelMesh);
+	_physics_object2->SetPosition(1.0f, 7.0f, 0.0f);
+	_physics_object2->SetScale(0.5f, 0.5f, 0.5f);
+	_physics_object2->SetMass(2.0f);
 }
 
 Scene::~Scene()
 {
 	// You should neatly clean everything up here
 	delete _physics_object;
+	delete _physics_object2;
 	delete _level;
 	delete _camera;
 }
@@ -97,11 +106,30 @@ void Scene::Update(float deltaTs, Input* input)
 	if (_simulation_start == true)
 	{
 		glm::vec3 pos = _physics_object->GetPosition();
-		pos += glm::vec3(0.0, -deltaTs, 0.0);
+		//pos += glm::vec3(0.0, -deltaTs, 0.0);
+		//pos.y = 0.5 * (-9.8) * deltaTs * deltaTs;
+		glm::vec3 vel_temp;
+
+		vel_temp.y = _v_i.y + (-9.8) * deltaTs;
+		vel_temp.x = _v_i.x;
+		vel_temp.z = _v_i.z;
+
+		pos.y += (_v_i.y + vel_temp.y) / 2.0f * deltaTs;
+		pos.x += vel_temp.x * deltaTs;
+		pos.z += vel_temp.z * deltaTs;
+
+		_v_i = vel_temp;
+
+		if (pos.y <= 0.3f)
+		{
+			pos.y = 0.3f;
+		}
+
 		_physics_object->SetPosition(pos);
 
 	}
 	_physics_object->Update(deltaTs);
+	_physics_object2->Update(deltaTs);
 	_level->Update(deltaTs);
 	_camera->Update(input);
 
@@ -114,6 +142,7 @@ void Scene::Draw()
 {
 	// Draw objects, giving the camera's position and projection
 	_physics_object->Draw(_viewMatrix, _projMatrix);
+	_physics_object2->Draw(_viewMatrix, _projMatrix);
 	_level->Draw(_viewMatrix, _projMatrix);
 
 }

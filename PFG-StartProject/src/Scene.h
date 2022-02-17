@@ -45,6 +45,7 @@ private:
 	/** A physics object
 	*/
 	GameObject* _physics_object;
+	GameObject* _physics_object2;
 	/** An example game level in the scene
 	*/
 	GameObject* _level; 
@@ -64,6 +65,8 @@ private:
 	/** A boolen variable to control the start of the simulation This matrix is the camera's lens
 	*/
 	bool _simulation_start;
+	//Temp variable for Exercise 5: Use kinematics equations to compute free fall
+	glm::vec3 _v_i; 
 
 };
 

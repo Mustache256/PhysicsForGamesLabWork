@@ -29,6 +29,7 @@ void GameObject::Update( float deltaTs )
 	//_invModelMatrix = glm::rotate(glm::mat4(1.0f), -_rotation.y, glm::vec3(0,1,0) );
 	_modelMatrix = glm::translate(glm::mat4(1.0f), _position);
 	_modelMatrix = glm::scale(_modelMatrix, _scale);
+	_invModelMatrix = glm::inverse(_modelMatrix);
 }
 
 void GameObject::Draw(glm::mat4 &viewMatrix, glm::mat4 &projMatrix)
