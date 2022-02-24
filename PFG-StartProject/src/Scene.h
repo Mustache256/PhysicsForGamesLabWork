@@ -4,6 +4,7 @@
 
 #include "GameObject.h"
 #include "Camera.h"
+#include "KinematicsObject.h"
 
 /*! \brief Brief description.
 *  Scene class is a container for loading all the game objects in your simulation or your game. 
@@ -44,8 +45,11 @@ private:
 
 	/** A physics object
 	*/
-	GameObject* _physics_object;
-	GameObject* _physics_object2;
+
+	KinematicsObject* _physics_object;
+	KinematicsObject* _physics_object2;
+	//GameObject* _physics_object;
+	//GameObject* _physics_object2;
 	/** An example game level in the scene
 	*/
 	GameObject* _level; 
@@ -66,7 +70,7 @@ private:
 	*/
 	bool _simulation_start;
 	//Temp variable for Exercise 5: Use kinematics equations to compute free fall
-	glm::vec3 _v_i; 
+	//glm::vec3 _v_i; 
 
 };
 

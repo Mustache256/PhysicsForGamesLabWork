@@ -1,6 +1,5 @@
 #include "Scene.h"
 
-
 /*! \brief Brief description.
 *  Scene class is a container for loading all the game objects in your simulation or your game.
 *
@@ -17,11 +16,13 @@ Scene::Scene()
 	_lightPosition = glm::vec3(10, 10, 0);
 
 	//Temp variable for Exercise 5: Une kinematics equations to compute the physics
-	_v_i = glm::vec3(0.0f, 0.5f, 0.0f);
+	glm::vec3 _v_i = glm::vec3(0.0f, 0.5f, 0.0f);
 
 	// Create a game object
-	_physics_object = new GameObject();
-	_physics_object2 = new GameObject();
+	_physics_object = new KinematicsObject();
+	_physics_object2 = new KinematicsObject();
+	_physics_object->SetVelocity(_v_i);
+	_physics_object2->SetVelocity(_v_i);
 	// Create a game level object
 	_level = new GameObject();
 
@@ -78,12 +79,12 @@ Scene::Scene()
 	modelMesh->LoadOBJ("assets/models/sphere.obj");
 	// Tell the game object to use this mesh
 	_physics_object->SetMesh(modelMesh);
-	_physics_object->SetPosition(0.0f, 5.0f, 0.0f);
-	_physics_object->SetScale(0.3f, 0.3f, 0.3f);
+	_physics_object->SetPosition(glm::vec3(0.0f, 5.0f, 0.0f));
+	_physics_object->SetScale(glm::vec3(0.3f, 0.3f, 0.3f));
 
 	_physics_object2->SetMesh(modelMesh);
-	_physics_object2->SetPosition(1.0f, 7.0f, 0.0f);
-	_physics_object2->SetScale(0.5f, 0.5f, 0.5f);
+	_physics_object2->SetPosition(glm::vec3(1.0f, 7.0f, 0.0f));
+	_physics_object2->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	_physics_object2->SetMass(2.0f);
 }
 
@@ -105,7 +106,7 @@ void Scene::Update(float deltaTs, Input* input)
 	}
 	if (_simulation_start == true)
 	{
-		glm::vec3 pos = _physics_object->GetPosition();
+		/*glm::vec3 pos = _physics_object->GetPosition();
 		//pos += glm::vec3(0.0, -deltaTs, 0.0);
 		//pos.y = 0.5 * (-9.8) * deltaTs * deltaTs;
 		glm::vec3 vel_temp;
@@ -123,10 +124,12 @@ void Scene::Update(float deltaTs, Input* input)
 		if (pos.y <= 0.3f)
 		{
 			pos.y = 0.3f;
-		}
+		}*/
 
-		_physics_object->SetPosition(pos);
+		//_physics_object->SetPosition(pos);
 
+		_physics_object->StartSimulation(_simulation_start);
+		_physics_object2->StartSimulation(_simulation_start);
 	}
 	_physics_object->Update(deltaTs);
 	_physics_object2->Update(deltaTs);

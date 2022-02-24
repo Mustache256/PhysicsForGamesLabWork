@@ -1,12 +1,7 @@
 ﻿  Scene.cpp
-H:\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(113,23): warning C4244:  '=': conversion from 'double' to 'T', possible loss of data
-H:\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(113,23): warning C4244:         with
-H:\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(113,23): warning C4244:         [
-H:\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(113,23): warning C4244:             T=float
-H:\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(113,23): warning C4244:         ]
   Generating code
-  1 of 731 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+  4 of 736 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    4 functions had inline decision re-evaluated but remain unchanged
+    3 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   PFG-StartProject.vcxproj -> H:\GitHub\PhysicsForGamesLabWork\PFG-StartProject\build\Release\PFG-StartProject.exe
