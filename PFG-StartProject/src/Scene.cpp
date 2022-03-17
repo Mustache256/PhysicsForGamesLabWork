@@ -21,8 +21,10 @@ Scene::Scene()
 	// Create a game object
 	_physics_object = new KinematicsObject();
 	_physics_object2 = new KinematicsObject();
+	_dPhysics_Object = new DynamicObject();
 	_physics_object->SetVelocity(_v_i);
 	_physics_object2->SetVelocity(_v_i);
+	_dPhysics_Object->SetVelocity(_v_i);
 	// Create a game level object
 	_level = new GameObject();
 
@@ -72,6 +74,7 @@ Scene::Scene()
 	// Tell the level object to use this material
 	_physics_object->SetMaterial(objectMaterial);
 	_physics_object2->SetMaterial(objectMaterial);
+	_dPhysics_Object->SetMaterial(objectMaterial);
 
 	// Set the geometry for the object
 	Mesh *modelMesh = new Mesh();
@@ -86,6 +89,12 @@ Scene::Scene()
 	_physics_object2->SetPosition(glm::vec3(1.0f, 7.0f, 0.0f));
 	_physics_object2->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	_physics_object2->SetMass(2.0f);
+
+	_dPhysics_Object->SetMesh(modelMesh);
+	_dPhysics_Object->SetPosition(glm::vec3(-1.0f, 7.0f, 0.0f));
+	_dPhysics_Object->SetScale(glm::vec3(0.3f, 0.3f, 0.3f));
+	_dPhysics_Object->SetBoundingRadius(0.3f);
+	_dPhysics_Object->SetMass(2.0f);
 }
 
 Scene::~Scene()
@@ -93,6 +102,7 @@ Scene::~Scene()
 	// You should neatly clean everything up here
 	delete _physics_object;
 	delete _physics_object2;
+	delete _dPhysics_Object;
 	delete _level;
 	delete _camera;
 }
@@ -130,9 +140,11 @@ void Scene::Update(float deltaTs, Input* input)
 
 		_physics_object->StartSimulation(_simulation_start);
 		_physics_object2->StartSimulation(_simulation_start);
+		_dPhysics_Object->StartSimulation(_simulation_start);
 	}
 	_physics_object->Update(deltaTs);
 	_physics_object2->Update(deltaTs);
+	_dPhysics_Object->Update(deltaTs);
 	_level->Update(deltaTs);
 	_camera->Update(input);
 
@@ -146,6 +158,7 @@ void Scene::Draw()
 	// Draw objects, giving the camera's position and projection
 	_physics_object->Draw(_viewMatrix, _projMatrix);
 	_physics_object2->Draw(_viewMatrix, _projMatrix);
+	_dPhysics_Object->Draw(_viewMatrix, _projMatrix);
 	_level->Draw(_viewMatrix, _projMatrix);
 
 }

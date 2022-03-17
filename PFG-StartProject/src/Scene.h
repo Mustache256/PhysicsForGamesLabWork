@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "KinematicsObject.h"
+#include "DynamicObject.h"
 
 /*! \brief Brief description.
 *  Scene class is a container for loading all the game objects in your simulation or your game. 
@@ -48,6 +49,7 @@ private:
 
 	KinematicsObject* _physics_object;
 	KinematicsObject* _physics_object2;
+	DynamicObject* _dPhysics_Object;
 	//GameObject* _physics_object;
 	//GameObject* _physics_object2;
 	/** An example game level in the scene
