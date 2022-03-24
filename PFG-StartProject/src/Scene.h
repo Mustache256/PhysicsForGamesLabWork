@@ -47,9 +47,12 @@ private:
 	/** A physics object
 	*/
 
-	KinematicsObject* _physics_object;
-	KinematicsObject* _physics_object2;
+	//KinematicsObject* _physics_object;
+	//KinematicsObject* _physics_object2;
 	DynamicObject* _dPhysics_Object;
+	DynamicObject* _dPhysics_Object2;
+	DynamicObject* _dPhysics_Object3;
+	DynamicObject* _dPhysics_Object4;
 	//GameObject* _physics_object;
 	//GameObject* _physics_object2;
 	/** An example game level in the scene
