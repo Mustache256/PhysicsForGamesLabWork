@@ -6,8 +6,8 @@
 */
 Camera::Camera()
 {
-	_cameraPos = glm::vec3(0.0f, 3.0f, 0.0f); //glm::vec3(4.0f, 3.0f, 3.0f);
-	glm::vec3 initTarget = glm::vec3(-100.0, 0.0f, 0.0f);
+	_cameraPos = glm::vec3(0.0f, 8.0f, 5.0f); //glm::vec3(4.0f, 3.0f, 3.0f);
+	glm::vec3 initTarget = glm::vec3(100.0, 0.0f, 0.0f);
 
 	_cameraAngleX = 90.0f;
 	_cameraAngleY = 0.0f;

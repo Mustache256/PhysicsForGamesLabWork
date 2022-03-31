@@ -43,6 +43,9 @@ public:
 	*   @param float deltaTs simulation time step length
 	*/
 	 void Euler(float deltaTs);
+	 void RungeKutta2(float deltaTs);
+	 void RungeKutta4(float deltaTs);
+	 void Verlet(float deltaTs);
 
 	/** Set force for the object
 	* @param glm::vec3 force a 3D vector for the force acting on the object
@@ -111,6 +114,9 @@ private:
 	/** Position of the object
 	*/
 	glm::vec3 _position;
+	/** Previous position of the object
+	*/
+	glm::vec3 _previousPosition;
 	/** Velocity of the object
 	*/
 	glm::vec3 _velocity;

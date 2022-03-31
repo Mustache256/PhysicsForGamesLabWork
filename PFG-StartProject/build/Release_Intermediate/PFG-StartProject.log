@@ -1,7 +1,7 @@
-﻿  DynamicObject.cpp
+﻿  Camera.cpp
   Generating code
-  1 of 745 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+  2 of 745 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    3 functions had inline decision re-evaluated but remain unchanged
+    4 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   PFG-StartProject.vcxproj -> H:\GitHub\PhysicsForGamesLabWork\PFG-StartProject\build\Release\PFG-StartProject.exe

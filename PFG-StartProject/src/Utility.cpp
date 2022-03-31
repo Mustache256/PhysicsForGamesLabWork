@@ -40,6 +40,7 @@ namespace PFG
 		{
 			n = glm::normalize(c0 - c1);
 			cp = r1 * n;
+
 			return true;
 		}
 		return false;
