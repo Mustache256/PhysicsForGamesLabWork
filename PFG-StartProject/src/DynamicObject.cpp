@@ -1,6 +1,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+#include <iostream>
 
 #include "DynamicObject.h"
 #include "Utility.h"
@@ -21,7 +22,7 @@ DynamicObject::~DynamicObject()
 
 }
 
-void DynamicObject::Update(float deltaTs)
+void DynamicObject::Update(GameObject* otherObj, float deltaTs)
 {
 	//float moon_Grav = 0.1f;
 	float collision_impulse;
@@ -36,7 +37,8 @@ void DynamicObject::Update(float deltaTs)
 		glm::vec3 gravityForce(0.0f, -9.8 * _mass * 0.1f, 0.0f);
 		AddForce(gravityForce);
 
-		float elasticity = 0.7f;
+		CollisionResponse(otherObj, deltaTs);
+		/*float elasticity = 0.7f;
 		float r = GetBoundingRadius();
 		
 		glm::vec3 point_on_floor(0.0f, 0.0f, 0.0f);
@@ -54,7 +56,7 @@ void DynamicObject::Update(float deltaTs)
 			_velocity += impulse_force / _mass;
 			//AddForce(impulse_force);
 			AddForce(contact_force);
-		}
+		}*/
 
 		Verlet(deltaTs);
 	}
@@ -146,4 +148,63 @@ void DynamicObject::Verlet(float deltaTs)
 
 	_velocity += acceleration * deltaTs;
 	
+}
+
+void DynamicObject::CollisionResponse(GameObject* otherObj, float deltaTs)
+{
+	float collision_impulse;
+	glm::vec3 floor_normal(0.0f, 1.0f, 0.0f);
+	glm::vec3 impulse_force;
+	glm::vec3 contact_force(0.0f, 9.8 * _mass * 0.1f, 0.0f);
+
+	const float r = GetBoundingRadius();
+	float elasticity = 0.8;
+	int type = otherObj->GetType();
+
+	if (type == 1)
+	{
+		glm::vec3 n = glm::vec3(0.0f, 0.1f, 0.0f);
+		glm::vec3 c0 = _position;
+		glm::vec3 c1 = _position + _velocity * deltaTs;
+		glm::vec3 q = otherObj->GetInitialVelocity(); // This was getvelocity not getinitialvelocity
+		glm::vec3 ci;
+
+		bool collision = PFG::MovingSphereToPlaneCollision(n, c0, c1, q, r, ci);
+
+		if (collision)
+		{
+			glm::vec3 ColliderVel = otherObj->GetInitialVelocity(); // This was getvelocity not getinitialvelocity
+			glm::vec3 relativeVel = _velocity - ColliderVel;
+			glm::vec3 n = glm::vec3(0.0f, 1.0f, 0.0f); // floor normal up
+			float invColliderMass = 0.0f; // floor doesn't move
+
+			glm::vec3 contactPosition = ci;
+			float eCof = -(1.0f + elasticity) * glm::dot(relativeVel, n);
+			float invMass = 1 / GetMass();
+			float jLin = eCof / (invMass + invColliderMass);
+
+			glm::vec3 collision_impulse_force = jLin * n / deltaTs;
+
+			glm::vec3 contact_force = glm::vec3(0.0f, 9.81f * _mass, 0.0f);
+			glm::vec3 total_force = contact_force + collision_impulse_force;
+
+			AddForce(total_force);
+		}
+	}
+	else if (otherObj->GetType() == 1)
+	{
+		DynamicObject* otherDynamicObj = dynamic_cast<DynamicObject*>(otherObj);
+		glm::vec3 c0 = otherDynamicObj->GetPosition() + otherDynamicObj->GetVelocity() * deltaTs;
+		glm::vec3 c1 = _position + _velocity * deltaTs;
+		float r1 = GetBoundingRadius();
+		float r2 = otherDynamicObj->GetBoundingRadius();
+		glm::vec3 cp;
+
+		bool collision = PFG::SphereToSphereCollision(c0, c1, r1, r2, cp);
+
+		if (collision)
+		{
+			std::cout << "Collided with sphere" << std::endl;
+		}
+	}
 }

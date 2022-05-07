@@ -42,6 +42,8 @@ public:
 	*/
 	void Draw();
 
+	DynamicObject* CreateSphere(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 scale, float mass, float boundingRadius);
+
 private:
 
 	/** A physics object
@@ -49,10 +51,10 @@ private:
 
 	//KinematicsObject* _physics_object;
 	//KinematicsObject* _physics_object2;
-	DynamicObject* _dPhysics_Object;
+	/*DynamicObject* _dPhysics_Object;
 	DynamicObject* _dPhysics_Object2;
 	DynamicObject* _dPhysics_Object3;
-	DynamicObject* _dPhysics_Object4;
+	DynamicObject* _dPhysics_Object4;*/
 	//GameObject* _physics_object;
 	//GameObject* _physics_object2;
 	/** An example game level in the scene
@@ -77,6 +79,7 @@ private:
 	//Temp variable for Exercise 5: Use kinematics equations to compute free fall
 	//glm::vec3 _v_i; 
 
+	std::vector<DynamicObject*> _sceneDynamicObjects;
 };
 
 #endif // !_SCENE_H_

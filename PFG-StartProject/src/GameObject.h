@@ -55,6 +55,11 @@ public:
 	/** Function for getting position of the game object
 	* @return The result
 	*/
+
+	void SetInitialVelocity(glm::vec3 vel) { _initialVelocity = vel; }
+
+	glm::vec3 GetInitialVelocity() { return _initialVelocity; }
+
 	glm::vec3 GetPosition() {return _position;}
 	
 	/** A virtual function for updating the simulation result at each time frame
@@ -72,6 +77,10 @@ public:
 	void SetMass(float _mass) { mass = _mass; }
 
 	float GetMass() { return mass; }
+
+	void SetType(int type);
+
+	int GetType();
 
 protected:
 
@@ -105,6 +114,9 @@ protected:
 
 	float mass;
 
+	int m_objectType;
+
+	glm::vec3 _initialVelocity;
 };
 
 

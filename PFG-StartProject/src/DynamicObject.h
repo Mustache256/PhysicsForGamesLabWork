@@ -30,7 +30,7 @@ public:
 	*   next procedure.
 	*   @param float deltaTs simulation time step length
 	*/
-	virtual void Update(float deltaTs);
+	virtual void Update(GameObject* otherObj, float deltaTs);
 
 	/** Add force that acts on the object to the total force for physics computation
 	*  
@@ -46,6 +46,8 @@ public:
 	 void RungeKutta2(float deltaTs);
 	 void RungeKutta4(float deltaTs);
 	 void Verlet(float deltaTs);
+
+	 void CollisionResponse(GameObject* otherObject, float deltaTs);
 
 	/** Set force for the object
 	* @param glm::vec3 force a 3D vector for the force acting on the object
@@ -93,6 +95,8 @@ public:
 	* @return a 4x4 matrix
 	*/
 	const glm::mat4 GetOrientation() const { return _orientation; }
+
+	const glm::vec3 GetVelocity() const { return _velocity; }
 
 	/** A boolean variable to control the start of the simulation This matrix is the camera's lens
 	*/

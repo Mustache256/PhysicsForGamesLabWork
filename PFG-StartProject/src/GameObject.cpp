@@ -51,3 +51,13 @@ void GameObject::Draw(glm::mat4 &viewMatrix, glm::mat4 &projMatrix)
 
 	}
 }
+
+void GameObject::SetType(int type)
+{
+	m_objectType = type;
+}
+
+int GameObject::GetType()
+{
+	return m_objectType;
+}
