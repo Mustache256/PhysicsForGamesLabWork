@@ -9,7 +9,7 @@
 */
 Scene::Scene()
 {
-	fileRead("objFile1.txt");
+	
 	// Set up your scene here......
 	// Set a camera
 	_camera = new Camera();
@@ -62,6 +62,8 @@ Scene::Scene()
 	Mesh *dynamObjectMesh = new Mesh();
 	// Load from OBJ file. This must have triangulated geometry
 	dynamObjectMesh->LoadOBJ("assets/models/sphere.obj");
+
+	fileRead("objFile1.txt");
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -132,8 +134,7 @@ void Scene::Update(float deltaTs, Input* input)
 	_camera->Update(input);
 
 	_viewMatrix = _camera->GetView();
-	_projMatrix = _camera->GetProj();
-														
+	_projMatrix = _camera->GetProj();												
 }
 
 void Scene::Draw()
@@ -149,7 +150,6 @@ void Scene::Draw()
 	{
 		_sceneGameObjects.at(j)->Draw(_viewMatrix, _projMatrix);
 	}
-
 }
 
 DynamicObject* Scene::CreateSphere(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 scale, float mass, float boundingRadius)
