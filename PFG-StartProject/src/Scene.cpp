@@ -1,11 +1,15 @@
 #include "Scene.h"
 
+#include <fstream>
+#include <string>
+
 /*! \brief Brief description.
 *  Scene class is a container for loading all the game objects in your simulation or your game.
 *
 */
 Scene::Scene()
 {
+	fileRead("objFile1.txt");
 	// Set up your scene here......
 	// Set a camera
 	_camera = new Camera();
@@ -15,73 +19,67 @@ Scene::Scene()
 	// Position of the light, in world-space
 	_lightPosition = glm::vec3(10, 10, 0);
 
-	//Temp variable for Exercise 5: Une kinematics equations to compute the physics
-	glm::vec3 _v_i = glm::vec3(0.0f, 0.5f, 0.0f);
-
-	// Create a game level object
-	_level = new GameObject();
-
 	// Create the material for the game object- level
-	Material *modelMaterial = new Material();
+	Material *gameObjectMaterial = new Material();
 	// Shaders are now in files
-	modelMaterial->LoadShaders("assets/shaders/VertShader.txt", "assets/shaders/FragShader.txt");
+	gameObjectMaterial->LoadShaders("assets/shaders/VertShader.txt", "assets/shaders/FragShader.txt");
 	// You can set some simple material properties, these values are passed to the shader
 	// This colour modulates the texture colour
-	modelMaterial->SetDiffuseColour(glm::vec3(0.8, 0.8, 0.8));
+	gameObjectMaterial->SetDiffuseColour(glm::vec3(0.8, 0.8, 0.8));
 	// The material currently supports one texture
 	// This is multiplied by all the light components (ambient, diffuse, specular)
 	// Note that the diffuse colour set with the line above will be multiplied by the texture colour
 	// If you want just the texture colour, use modelMaterial->SetDiffuseColour( glm::vec3(1,1,1) );
-	modelMaterial->SetTexture("assets/textures/diffuse.bmp");
+	gameObjectMaterial->SetTexture("assets/textures/diffuse.bmp");
 	// Need to tell the material the light's position
 	// If you change the light's position you need to call this again
-	modelMaterial->SetLightPosition(_lightPosition);
+	gameObjectMaterial->SetLightPosition(_lightPosition);
 	// Tell the level object to use this material
-	_level->SetMaterial(modelMaterial);
 
 	// The mesh is the geometry for the object
-	Mesh *groundMesh = new Mesh();
+	Mesh *gameObjectMesh = new Mesh();
 	// Load from OBJ file. This must have triangulated geometry
-	groundMesh->LoadOBJ("assets/models/woodfloor.obj");
-	// Tell the game object to use this mesh
-	_level->SetMesh(groundMesh);
-	_level->SetPosition(0.0f, 0.0f, 0.0f);
-	_level->SetRotation(3.141590f, 0.0f, 0.0f);
-	_level->SetType(0);
-
+	gameObjectMesh->LoadOBJ("assets/models/woodfloor.obj");
 
 	// Create the material for the game object- level
-	Material *objectMaterial = new Material();
+	Material *dynamObjectMaterial = new Material();
 	// Shaders are now in files
-	objectMaterial->LoadShaders("assets/shaders/VertShader.txt", "assets/shaders/FragShader.txt");
+	dynamObjectMaterial->LoadShaders("assets/shaders/VertShader.txt", "assets/shaders/FragShader.txt");
 	// You can set some simple material properties, these values are passed to the shader
 	// This colour modulates the texture colour
-	objectMaterial->SetDiffuseColour(glm::vec3(0.8, 0.1, 0.1));
+	dynamObjectMaterial->SetDiffuseColour(glm::vec3(0.8, 0.1, 0.1));
 	// The material currently supports one texture
 	// This is multiplied by all the light components (ambient, diffuse, specular)
 	// Note that the diffuse colour set with the line above will be multiplied by the texture colour
 	// If you want just the texture colour, use modelMaterial->SetDiffuseColour( glm::vec3(1,1,1) );
-	objectMaterial->SetTexture("assets/textures/default.bmp");
+	dynamObjectMaterial->SetTexture("assets/textures/default.bmp");
 	// Need to tell the material the light's position
 	// If you change the light's position you need to call this again
-	objectMaterial->SetLightPosition(_lightPosition);
+	dynamObjectMaterial->SetLightPosition(_lightPosition);
 	// Tell the level object to use this material
 
 	// Set the geometry for the object
-	Mesh *modelMesh = new Mesh();
+	Mesh *dynamObjectMesh = new Mesh();
 	// Load from OBJ file. This must have triangulated geometry
-	modelMesh->LoadOBJ("assets/models/sphere.obj");
+	dynamObjectMesh->LoadOBJ("assets/models/sphere.obj");
 
 	for (int i = 0; i < 3; i++)
 	{
-		DynamicObject* newObj = CreateSphere(objectMaterial, modelMesh, glm::vec3(0.0f + i, 20.0f, 0.0f), glm::vec3(0.3f, 0.3f, 0.3f), 2.0f, 0.3f);
+		DynamicObject* newObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(std::stof(_fileInput.at(0)) + i, std::stof(_fileInput.at(1)), std::stof(_fileInput.at(2))), glm::vec3(std::stof(_fileInput.at(3)), std::stof(_fileInput.at(4)), std::stof(_fileInput.at(5))), std::stof(_fileInput.at(6)), std::stof(_fileInput.at(7)));
 
 		_sceneDynamicObjects.push_back(newObj);
 	}
 
-	DynamicObject* newObj = CreateSphere(objectMaterial, modelMesh, glm::vec3(0.0f, 25.0f, 0.0f), glm::vec3(0.3f, 0.3f, 0.3f), 2.0f, 0.3f);
+	for (int j = 0; j < 2; j++)
+	{
+		GameObject* newGameObj = CreatePlane(gameObjectMaterial, gameObjectMesh, glm::vec3(0.0f + j * 10, 0.0f, 0.0f), glm::vec3(3.141590f, 0.0f, 0.0f));
 
-	_sceneDynamicObjects.push_back(newObj);
+		_sceneGameObjects.push_back(newGameObj);
+	}
+
+	DynamicObject* newDynamObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(0.2f, 25.0f, 0.0f), glm::vec3(0.3f, 0.3f, 0.3f), 2.0f, 0.3f);
+
+	_sceneDynamicObjects.push_back(newDynamObj);
 }
 
 Scene::~Scene()
@@ -111,9 +109,26 @@ void Scene::Update(float deltaTs, Input* input)
 	}
 	for (int i = 0; i < _sceneDynamicObjects.size(); i++)
 	{
-		_sceneDynamicObjects.at(i)->Update(_sceneDynamicObjects.at(i), deltaTs);
+		for (size_t j = 0; j < _sceneGameObjects.size(); j++)
+		{
+			_sceneDynamicObjects.at(i)->Update(_sceneGameObjects.at(j), deltaTs / 6);
+		}
+		for (size_t k = 0; k < _sceneDynamicObjects.size(); k++)
+		{
+			if (k == i)
+			{
+				continue;
+			}
+			else
+			{
+				_sceneDynamicObjects.at(i)->Update(_sceneDynamicObjects.at(k), deltaTs / 9);
+			}
+		}
 	}
-	_level->Update(deltaTs);
+	for (int j = 0; j < _sceneGameObjects.size(); j++)
+	{
+		_sceneGameObjects.at(j)->Update(deltaTs);
+	}
 	_camera->Update(input);
 
 	_viewMatrix = _camera->GetView();
@@ -129,22 +144,60 @@ void Scene::Draw()
 	{
 		_sceneDynamicObjects.at(i)->Draw(_viewMatrix, _projMatrix);
 	}
-	_level->Draw(_viewMatrix, _projMatrix);
+
+	for (int j = 0; j < _sceneGameObjects.size(); j++)
+	{
+		_sceneGameObjects.at(j)->Draw(_viewMatrix, _projMatrix);
+	}
 
 }
 
 DynamicObject* Scene::CreateSphere(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 scale, float mass, float boundingRadius)
 {
-	DynamicObject* object = new DynamicObject();
-	object->SetMaterial(mat);
-	object->SetMesh(modelMesh);
-	object->SetPosition(position);
-	object->SetScale(scale);
-	object->SetMass(mass);
-	object->SetBoundingRadius(boundingRadius);
-	object->SetType(1);
+	DynamicObject* dObject = new DynamicObject();
+	dObject->SetMaterial(mat);
+	dObject->SetMesh(modelMesh);
+	dObject->SetPosition(position);
+	dObject->SetScale(scale);
+	dObject->SetMass(mass);
+	dObject->SetBoundingRadius(boundingRadius);
+	dObject->SetType(1);
 
-	return object;
+	return dObject;
+}
+
+GameObject* Scene::CreatePlane(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 rotation)
+{
+	GameObject* gObject = new GameObject();
+	gObject->SetMaterial(mat);
+	gObject->SetMesh(modelMesh);
+	gObject->SetPosition(position.x, position.y, position.z);
+	gObject->SetRotation(rotation.x, rotation.y, rotation.z);
+	gObject->SetType(0);
+
+	return gObject;
+}
+
+void Scene::fileRead(std::string fileName)
+{
+	std::string line;
+	std::string fileString;
+	std::ifstream fileRead(fileName);
+	if (fileRead.is_open())
+	{
+		while (getline(fileRead, line))
+		{
+			std::cout << line << std::endl;
+			fileString += line + "\n";
+
+			_fileInput.push_back(line);
+		}
+	}
+	else
+	{
+		std::cout << "File unable to open" << std::endl;
+	}
+	fileRead.close();
 }
 
 

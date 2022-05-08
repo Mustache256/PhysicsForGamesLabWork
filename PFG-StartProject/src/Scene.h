@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "KinematicsObject.h"
 #include "DynamicObject.h"
+#include "GameObject.h"
 
 /*! \brief Brief description.
 *  Scene class is a container for loading all the game objects in your simulation or your game. 
@@ -44,6 +45,8 @@ public:
 
 	DynamicObject* CreateSphere(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 scale, float mass, float boundingRadius);
 
+	GameObject* CreatePlane(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 rotation);
+
 private:
 
 	/** A physics object
@@ -80,6 +83,12 @@ private:
 	//glm::vec3 _v_i; 
 
 	std::vector<DynamicObject*> _sceneDynamicObjects;
+
+	std::vector<GameObject*> _sceneGameObjects;
+
+	void fileRead(std::string fileName);
+
+	std::vector<std::string> _fileInput;
 };
 
 #endif // !_SCENE_H_

@@ -34,17 +34,17 @@ public:
 	* @param float posY y position
 	* @param float posZ z position
 	*/
-	void SetPosition( float posX, float posY, float posZ ) {_position.x = posX; _position.y = posY; _position.z = posZ;}
+	void SetPosition(float posX, float posY, float posZ) { _position.x = posX; _position.y = posY; _position.z = posZ; }
 	/** Function for setting position for the game object
 	* @param glm::vec3 value  a position 3D vector
 	*/
-	void SetPosition( glm::vec3 value) {_position = value;}
+	void SetPosition(glm::vec3 value) { _position = value; }
 	/** Function for setting rotation for the game object
 	* @param float rotX x rotation
 	* @param float rotY y rotation
 	* @param float rotZ z rotation
 	*/
-	void SetRotation( float rotX, float rotY, float rotZ ) {_rotation.x = rotX; _rotation.y = rotY; _rotation.z = rotZ;}
+	void SetRotation(float rotX, float rotY, float rotZ) { _rotation.x = rotX; _rotation.y = rotY; _rotation.z = rotZ; }
 	/** Function for setting scale for the game object
 	* @param float sX x scale
 	* @param float sY y scale
