@@ -24,19 +24,11 @@ DynamicObject::~DynamicObject()
 
 void DynamicObject::Update(GameObject* otherObj, float deltaTs)
 {
-	
-	float collision_impulse;
-	glm::vec3 floor_normal(0.0f, 1.0f, 0.0f);
-	float elasticity = 0.5;
-	glm::vec3 impulse_force;
-	glm::vec3 contact_force(0.0f, 9.8 * _mass * 0.1f, 0.0f);
-	float r = GetBoundingRadius();
-	
 	if (_start == true)
 	{
 		ClearForces();
 
-		glm::vec3 gravityForce(0.0f, -9.8 * _mass * 0.1f, 0.0f);
+		glm::vec3 gravityForce(0.0f, -9.8 * _mass * 0.5f, 0.0f);
 		AddForce(gravityForce);
 
 		CollisionResponse(otherObj, deltaTs);
@@ -172,8 +164,8 @@ void DynamicObject::CollisionResponse(GameObject* otherObj, float deltaTs)
 	else if (type == 1)
 	{
 		DynamicObject* otherDynamicObj = dynamic_cast<DynamicObject*>(otherObj);
-		glm::vec3 thisObjCentre1 = otherDynamicObj->GetPosition() + otherDynamicObj->GetVelocity() * deltaTs;
-		glm::vec3 otherObjCentre1 = _position + _velocity * deltaTs;
+		glm::vec3 thisObjCentre1 = _position + _velocity * deltaTs;
+		glm::vec3 otherObjCentre1 = otherDynamicObj->GetPosition() + otherDynamicObj->GetVelocity() * deltaTs;
 		float radius1 = GetBoundingRadius();
 		float radius2 = otherDynamicObj->GetBoundingRadius();
 		glm::vec3 cp;

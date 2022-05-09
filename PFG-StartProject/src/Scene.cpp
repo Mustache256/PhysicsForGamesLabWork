@@ -64,22 +64,34 @@ Scene::Scene()
 	dynamObjectMesh->LoadOBJ("assets/models/sphere.obj");
 
 	fileRead("objFile1.txt");
-
+	
 	for (int i = 0; i < 3; i++)
 	{
 		DynamicObject* newObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(std::stof(_fileInput.at(0)) + i, std::stof(_fileInput.at(1)), std::stof(_fileInput.at(2))), glm::vec3(std::stof(_fileInput.at(3)), std::stof(_fileInput.at(4)), std::stof(_fileInput.at(5))), std::stof(_fileInput.at(6)), std::stof(_fileInput.at(7)));
 
 		_sceneDynamicObjects.push_back(newObj);
 	}
+	
 
-	for (int j = 0; j < 2; j++)
+	/*for (int j = 0; j < 2; j++)
 	{
 		GameObject* newGameObj = CreatePlane(gameObjectMaterial, gameObjectMesh, glm::vec3(0.0f + j * 10, 0.0f, 0.0f), glm::vec3(3.141590f, 0.0f, 0.0f));
 
 		_sceneGameObjects.push_back(newGameObj);
 	}
 
-	DynamicObject* newDynamObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(0.2f, 25.0f, 0.0f), glm::vec3(0.3f, 0.3f, 0.3f), 2.0f, 0.3f);
+	for (int i = 0; i < 2; i++)
+	{
+		GameObject* newGameObj = CreatePlane(gameObjectMaterial, gameObjectMesh, glm::vec3(0.0f + i * 10, 0.0f, 10.0f), glm::vec3(3.141590f, 0.0f, 0.0f));
+
+		_sceneGameObjects.push_back(newGameObj);
+	}*/
+
+	GameObject* newGameObj = CreatePlane(gameObjectMaterial, gameObjectMesh, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f, 1.0f, 4.0f));
+
+	_sceneGameObjects.push_back(newGameObj);
+
+	DynamicObject* newDynamObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(0.0f, 25.0f, 0.0f), glm::vec3(0.3f, 0.3f, 0.3f), 2.0f, 0.3f);
 
 	_sceneDynamicObjects.push_back(newDynamObj);
 }
@@ -90,6 +102,10 @@ Scene::~Scene()
 	for (int i = 0; i < _sceneDynamicObjects.size(); i++)
 	{
 		delete _sceneDynamicObjects.at(i);
+	}
+	for (size_t i = 0; i < _sceneGameObjects.size(); i++)
+	{
+		delete _sceneGameObjects.at(i);
 	}
 	delete _level;
 	delete _camera;
@@ -166,13 +182,14 @@ DynamicObject* Scene::CreateSphere(Material* mat, Mesh* modelMesh, glm::vec3 pos
 	return dObject;
 }
 
-GameObject* Scene::CreatePlane(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 rotation)
+GameObject* Scene::CreatePlane(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
 {
 	GameObject* gObject = new GameObject();
 	gObject->SetMaterial(mat);
 	gObject->SetMesh(modelMesh);
 	gObject->SetPosition(position.x, position.y, position.z);
 	gObject->SetRotation(rotation.x, rotation.y, rotation.z);
+	gObject->SetScale(scale.x, scale.y, scale.z);
 	gObject->SetType(0);
 
 	return gObject;

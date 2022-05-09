@@ -14,6 +14,7 @@ GameObject::GameObject()
 	_material = NULL;
 	// Set default value
 	_scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 GameObject::~GameObject()
@@ -29,6 +30,11 @@ void GameObject::Update( float deltaTs )
 	//_invModelMatrix = glm::rotate(glm::mat4(1.0f), -_rotation.y, glm::vec3(0,1,0) );
 	_modelMatrix = glm::translate(glm::mat4(1.0f), _position);
 	_modelMatrix = glm::scale(_modelMatrix, _scale);
+	_modelMatrix = glm::rotate(_modelMatrix, _rotation.x, glm::vec3(1, 0, 0));
+	_invModelMatrix = glm::inverse(_modelMatrix);
+	_modelMatrix = glm::rotate(_modelMatrix, _rotation.y, glm::vec3(0, 1, 0));
+	_invModelMatrix = glm::inverse(_modelMatrix);
+	_modelMatrix = glm::rotate(_modelMatrix, _rotation.z, glm::vec3(0, 0, 1));
 	_invModelMatrix = glm::inverse(_modelMatrix);
 }
 

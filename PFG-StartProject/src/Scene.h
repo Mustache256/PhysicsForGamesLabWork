@@ -45,7 +45,7 @@ public:
 
 	DynamicObject* CreateSphere(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 scale, float mass, float boundingRadius);
 
-	GameObject* CreatePlane(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 rotation);
+	GameObject* CreatePlane(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 
 private:
 
