@@ -93,10 +93,10 @@ protected:
 
 	/** Matrix for the position of the game object
 	*/ 
-	glm::mat4 _modelMatrix;
+	glm::mat4 dModelMatrix;
 	/** Matrix for the orientation of the game object
 	*/
-	glm::mat4 _invModelMatrix;
+	glm::mat4 dInvModelMatrix;
 	
 	/** Position of the model
 	* The model matrix must be built from the position of the model geometry

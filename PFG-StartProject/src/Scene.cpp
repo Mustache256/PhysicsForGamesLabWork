@@ -91,7 +91,7 @@ Scene::Scene()
 
 	_sceneGameObjects.push_back(newGameObj);
 
-	DynamicObject* newDynamObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(0.0f, 25.0f, 0.0f), glm::vec3(0.3f, 0.3f, 0.3f), 2.0f, 0.3f);
+	DynamicObject* newDynamObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(0.2f, 25.0f, 0.0f), glm::vec3(0.3f, 0.3f, 0.3f), 2.0f, 0.3f);
 
 	_sceneDynamicObjects.push_back(newDynamObj);
 }

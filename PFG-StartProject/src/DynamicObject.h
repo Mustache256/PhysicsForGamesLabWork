@@ -37,8 +37,8 @@ public:
 	*  
 	*   @param const glm::vec3 force 
 	*/
-	void AddForce(const glm::vec3 force) { _force += force; }
-	void ClearForces() { _force = glm::vec3(0.0f, 0.0f, 0.0f); }
+	void AddForce(const glm::vec3 force) { dForce += force; }
+	void ClearForces() { dForce = glm::vec3(0.0f, 0.0f, 0.0f); }
 	/** Numerical integration function to compute the current velocity and the current position
 	* based on the velocity and the position of the previous time step
 	*   @param float deltaTs simulation time step length
@@ -50,58 +50,64 @@ public:
 
 	 void CollisionResponse(GameObject* otherObject, float deltaTs);
 
+	 void GameObjectCollision(GameObject* otherObject, float deltaTs, float elasticity);
+
+	 void DynamicObjectCollision(GameObject* otherObejct, float deltaTs, float elasticity);
+
 	/** Set force for the object
 	* @param glm::vec3 force a 3D vector for the force acting on the object
 	*/
-	void SetForce(const glm::vec3 force) { _force = force; }
+	void SetForce(const glm::vec3 force) { dForce = force; }
 	/** Set mass for the object
 	* @param float mass a 3D vector for the mass of the object
 	*/
-	void SetMass(float mass) { _mass = mass; }
+	void SetMass(float mass) { dMass = mass; }
 	/** Set a sphere bounding volume for the object
 	* @param float r  the radius of the bounding sphere of the object
 	*/
-	void SetBoundingRadius(float r) { _bRadius = r; }
+	void SetBoundingRadius(float r) { dBoundingRadius = r; }
 
 	/** Set position for the object
 	* @param glm::vec3 pos a 3D vector for the position of the object
 	*/
-	void SetPosition(const glm::vec3 pos) { _position = pos; }
+	void SetPosition(const glm::vec3 pos) { dPosition = pos; }
 	/** Set velocity for the object
 	* @param glm::vec3 vel a 3D vector for the velocity of the object
 	*/
-	void SetVelocity(const glm::vec3 vel) { _velocity = vel; }
+	void SetVelocity(const glm::vec3 vel) { dVelocity = vel; }
 	/** Set scale for the object
 	* @param glm::vec3 vel a 3D vector for the scale of the object
 	*/
-	void SetScale(const glm::vec3 scale) { _scale = scale; }
+	void SetScale(const glm::vec3 scale) { dScale = scale; }
 
 	/** Get the force acting on the object
 	* @return a 3D vector
 	*/
-	const glm::vec3 GetForce() const { return _force; }
+	const glm::vec3 GetForce() const { return dForce; }
 	/** Get the mass of the object
 	* @return the result
 	*/
-	const float GetMass() const { return _mass; }
+	const float GetMass() const { return dMass; }
 	/** Get the radius of the bounding sphere of the object
 	* @return the result
 	*/
-	const float GetBoundingRadius() const { return _bRadius; }
+	const float GetBoundingRadius() const { return dBoundingRadius; }
 	/** Get the position of the object
 	* @return a 3D vector
 	*/
-	const glm::vec3 GetPosition() const { return _position; }
+	const glm::vec3 GetPosition() const { return dPosition; }
 	/** Get the orientation of the object
 	* @return a 4x4 matrix
 	*/
-	const glm::mat4 GetOrientation() const { return _orientation; }
+	const glm::mat4 GetOrientation() const { return dOrientation; }
 
-	const glm::vec3 GetVelocity() const { return _velocity; }
+	const glm::vec3 GetVelocity() const { return dVelocity; }
+
+	void CalcInverseInertiaTensor();
 
 	/** A boolean variable to control the start of the simulation This matrix is the camera's lens
 	*/
-	void StartSimulation(bool start) { _start = start; }
+	void StartSimulation(bool _start);
 
 private:
 
@@ -115,52 +121,52 @@ private:
 	*/
 	/** The total force on the object
 	*/
-	glm::vec3 _force;
+	glm::vec3 dForce;
 	/** Position of the object
 	*/
-	glm::vec3 _position;
+	glm::vec3 dPosition;
 	/** Previous position of the object
 	*/
-	glm::vec3 _previousPosition;
+	glm::vec3 dPreviousPosition;
 	/** Velocity of the object
 	*/
-	glm::vec3 _velocity;
+	glm::vec3 dVelocity;
 	/** The mass of the object
 	*/
-	float _mass;
+	float dMass;
 	/** Scale of the object
 	*/
 	/** The radius of a bounding sphere of the object
 	*/
-	float _bRadius;
+	float dBoundingRadius;
 	/** Scale of the object
 	*/
-	glm::vec3 _scale;
+	glm::vec3 dScale;
 	/** Orientation of the object
 	*/
-	glm::mat4 _orientation;
+	glm::mat4 dOrientation;
 
 	/** Angular dynamics Troque
 	*/
-	glm::vec3 _torque;
+	glm::vec3 dTorque;
 	/** Angular dynamics angular velocity
 	*/
-	glm::vec3 _angular_velocity;
+	glm::vec3 dAngularVelocity;
 	/** Angular dynamics angular momentum
 	*/
-	glm::vec3 _angular_momentum;
+	glm::vec3 dAngularMomentum;
 	/** Angular dynamics inverse inertia tensor
 	*/
-	glm::mat3 _inertia_tensor_inverse;
+	glm::mat3 dInertiaTensorInverse;
 	/** Angular dynamics inverse body inertia tensor
 	*/
-	glm::mat3 _body_inertia_tensor_inverse;
+	glm::mat3 dBodyInertiaTensorInverse;
 	/** Angular dynamics rotation matrix
 	*/
-	glm::mat3 _R;
+	glm::mat3 dRotationMatrix;
 	/** Quaterion
 	*/
-	glm::quat _rotQuat;
+	glm::quat dRotationQuat;
 
 	/**
 	* lerp
@@ -171,7 +177,9 @@ private:
 	}
 	/** A boolean variable to control the start of the simulation This matrix is the camera's lens
 	*/
-	bool _start;
+	bool dStart;
+
+	bool dStopped;
 };
 
 #endif //!_DynamicObject_H_

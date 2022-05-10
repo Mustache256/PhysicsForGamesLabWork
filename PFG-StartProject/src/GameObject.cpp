@@ -28,14 +28,14 @@ void GameObject::Update( float deltaTs )
 	// Make sure matrices are up to date (if you don't change them elsewhere, you can put this in the update function)
 	//_modelMatrix = glm::rotate(_modelMatrix, _rotation.y, glm::vec3(0,1,0) );
 	//_invModelMatrix = glm::rotate(glm::mat4(1.0f), -_rotation.y, glm::vec3(0,1,0) );
-	_modelMatrix = glm::translate(glm::mat4(1.0f), _position);
-	_modelMatrix = glm::scale(_modelMatrix, _scale);
-	_modelMatrix = glm::rotate(_modelMatrix, _rotation.x, glm::vec3(1, 0, 0));
-	_invModelMatrix = glm::inverse(_modelMatrix);
-	_modelMatrix = glm::rotate(_modelMatrix, _rotation.y, glm::vec3(0, 1, 0));
-	_invModelMatrix = glm::inverse(_modelMatrix);
-	_modelMatrix = glm::rotate(_modelMatrix, _rotation.z, glm::vec3(0, 0, 1));
-	_invModelMatrix = glm::inverse(_modelMatrix);
+	dModelMatrix = glm::translate(glm::mat4(1.0f), _position);
+	dModelMatrix = glm::scale(dModelMatrix, _scale);
+	dModelMatrix = glm::rotate(dModelMatrix, _rotation.x, glm::vec3(1, 0, 0));
+	dInvModelMatrix = glm::inverse(dModelMatrix);
+	dModelMatrix = glm::rotate(dModelMatrix, _rotation.y, glm::vec3(0, 1, 0));
+	dInvModelMatrix = glm::inverse(dModelMatrix);
+	dModelMatrix = glm::rotate(dModelMatrix, _rotation.z, glm::vec3(0, 0, 1));
+	dInvModelMatrix = glm::inverse(dModelMatrix);
 }
 
 void GameObject::Draw(glm::mat4 &viewMatrix, glm::mat4 &projMatrix)
@@ -47,7 +47,7 @@ void GameObject::Draw(glm::mat4 &viewMatrix, glm::mat4 &projMatrix)
 			// Give all the matrices to the material
 
 			// This makes sure they are sent to the shader
-			_material->SetMatrices(_modelMatrix, _invModelMatrix, viewMatrix, projMatrix);
+			_material->SetMatrices(dModelMatrix, dInvModelMatrix, viewMatrix, projMatrix);
 			// This activates the shader
 			_material->Apply();
 		}
