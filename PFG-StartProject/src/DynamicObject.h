@@ -38,7 +38,12 @@ public:
 	*   @param const glm::vec3 force 
 	*/
 	void AddForce(const glm::vec3 force) { dForce += force; }
+
+	void AddTorque(glm::vec3 torque) { dTorque += torque; }
+
 	void ClearForces() { dForce = glm::vec3(0.0f, 0.0f, 0.0f); }
+
+	void ClearTorque() { dTorque = glm::vec3(0.0f, 0.0f, 0.0f); }
 	/** Numerical integration function to compute the current velocity and the current position
 	* based on the velocity and the position of the previous time step
 	*   @param float deltaTs simulation time step length
@@ -104,6 +109,8 @@ public:
 	const glm::vec3 GetVelocity() const { return dVelocity; }
 
 	void CalcInverseInertiaTensor();
+	float ECoefficient(float elasticity, glm::vec3 velocity, glm::vec3 normal);
+	glm::vec3 CalcCollisionImpulseForce(float linear, float angular, glm::vec3 normal);
 
 	/** A boolean variable to control the start of the simulation This matrix is the camera's lens
 	*/
@@ -167,6 +174,8 @@ private:
 	/** Quaterion
 	*/
 	glm::quat dRotationQuat;
+
+	glm::mat3 dAngVelocityMat;
 
 	/**
 	* lerp

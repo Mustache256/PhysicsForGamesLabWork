@@ -10,7 +10,16 @@ DynamicObject::DynamicObject()
 {
 	dForce = glm::vec3(0.0f, 0.0f, 0.0f);
 	dVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
-	dMass = 1.0f;
+	dMass = 0.0f;
+	dBoundingRadius = 0.0f;
+
+	dTorque = glm::vec3(0.0f, 0.0f, 0.0f);
+	dAngularVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
+	dAngularMomentum = glm::vec3(0.0f, 0.0f, 0.0f);
+	dAngVelocityMat = glm::mat3(0.0f);
+
+	dRotationMatrix = glm::mat3(1.0f);
+	dRotationQuat = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 
 	dScale = glm::vec3(1.0f, 1.0f, 1.0f);
 	dStart = false;
@@ -47,6 +56,7 @@ void DynamicObject::Update(GameObject* otherObj, float deltaTs)
 	if (dStart == true)
 	{
 		ClearForces();
+		ClearTorque();
 
 		glm::vec3 gravityForce(0.0f, -9.8 * dMass * 0.5f, 0.0f);
 		AddForce(gravityForce);
@@ -54,8 +64,8 @@ void DynamicObject::Update(GameObject* otherObj, float deltaTs)
 		CollisionResponse(otherObj, deltaTs);
 
 		//Verlet(deltaTs);
-		//Euler(deltaTs);
-		RungeKutta4(deltaTs);
+		Euler(deltaTs);
+		//RungeKutta4(deltaTs);
 	}
 
 	UpdateModelMatrix();
@@ -71,6 +81,29 @@ void DynamicObject::Euler(float deltaTs)
 	float oneOverMass = 1 / dMass;
 	dVelocity += (dForce * oneOverMass) * deltaTs;
 	dPosition += dVelocity * deltaTs;
+
+	if (dStopped)
+	{
+		dVelocity.x = 0.0f;
+		dVelocity.z = 0.0f;
+	}
+
+	dAngularMomentum += dTorque * deltaTs;
+
+	if (dStopped)
+	{
+		dAngularMomentum = glm::vec3(0.0f, 0.0f, 0.0f);
+	}
+
+	CalcInverseInertiaTensor();
+
+	dAngularVelocity = dInertiaTensorInverse * dAngularMomentum;
+
+	dAngVelocityMat = glm::mat3(0.0f, -dAngularVelocity.z, dAngularVelocity.y,
+		dAngularVelocity.z, 0.0f, -dAngularVelocity.x,
+		-dAngularVelocity.y, dAngularVelocity.x, 0.0f);
+
+	dRotationMatrix += dAngVelocityMat * dRotationMatrix * deltaTs;
 }
 
 void DynamicObject::UpdateModelMatrix()
@@ -107,6 +140,29 @@ void DynamicObject::RungeKutta2(float deltaTs)
 	//Evaluate once at t0 + deltaT using k1
 	dVelocity += k1;
 	dPosition += dVelocity * deltaTs;
+
+	//------ROTATION PHYSICS HERE------//
+	glm::vec3 tempTorque;
+
+	tempTorque = dTorque;
+	k0 = deltaTs * tempTorque;
+	tempTorque = dTorque + k0 / 2.0f;
+	k1 = deltaTs * tempTorque;
+
+	dAngularMomentum += k1;
+
+	if (dStopped)
+	{
+		dAngularMomentum = glm::vec3(0.0f, 0.0f, 0.0f);
+	}
+
+	CalcInverseInertiaTensor();
+
+	dAngularVelocity = dInertiaTensorInverse * dAngularMomentum;
+
+	dAngVelocityMat = glm::mat3(0.0f, -dAngularVelocity.z, dAngularVelocity.y, dAngularVelocity.z, 0.0f, -dAngularVelocity.x, -dAngularVelocity.y, dAngularVelocity.x, 0.0f);
+
+	dRotationMatrix += dAngVelocityMat * dRotationMatrix * deltaTs;
 }
 
 void DynamicObject::RungeKutta4(float deltaTs)
@@ -148,13 +204,10 @@ void DynamicObject::RungeKutta4(float deltaTs)
 
 	tempTorque = dTorque;
 	k0 = deltaTs * tempTorque;
-
 	tempTorque = dTorque + k0 / 2.0f;
 	k1 = deltaTs * tempTorque;
-
 	tempTorque = dTorque + k1 / 2.0f;
 	k2 = deltaTs * tempTorque;
-
 	tempTorque = dTorque + k2;
 	k3 = deltaTs * tempTorque;
 
@@ -169,11 +222,9 @@ void DynamicObject::RungeKutta4(float deltaTs)
 
 	dAngularVelocity = dInertiaTensorInverse * dAngularMomentum;
 
-	glm::mat3 omegaStar = glm::mat3(0.0f, -dAngularVelocity.z, dAngularVelocity.y,
-		dAngularVelocity.z, 0.0f, -dAngularVelocity.x,
-		-dAngularVelocity.y, dAngularVelocity.x, 0.0f);
+	dAngVelocityMat = glm::mat3(0.0f, -dAngularVelocity.z, dAngularVelocity.y, dAngularVelocity.z, 0.0f, -dAngularVelocity.x, -dAngularVelocity.y, dAngularVelocity.x, 0.0f);
 
-	dRotationMatrix += omegaStar * dRotationMatrix * deltaTs;
+	dRotationMatrix += dAngVelocityMat * dRotationMatrix * deltaTs;
 }
 
 void DynamicObject::Verlet(float deltaTs)
@@ -194,6 +245,7 @@ void DynamicObject::Verlet(float deltaTs)
 
 void DynamicObject::CollisionResponse(GameObject* otherObj, float deltaTs)
 {
+	dStopped = false;
 	float elasticity = 0.8;
 	int type = otherObj->GetType();
 
@@ -209,8 +261,7 @@ void DynamicObject::CollisionResponse(GameObject* otherObj, float deltaTs)
 
 void DynamicObject::GameObjectCollision(GameObject* otherObject, float deltaTs, float elasticity)
 {
-	dStopped = false;
-
+	glm::vec3 zeroVector = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 normal = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 thisObjCentre = dPosition;
 	glm::vec3 otherObjCentre = dPosition + dVelocity * deltaTs;
@@ -224,22 +275,18 @@ void DynamicObject::GameObjectCollision(GameObject* otherObject, float deltaTs, 
 	{
 		dPosition = contactPoint;
 
-		glm::vec3 r1 = GetBoundingRadius() * glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 r1 = GetBoundingRadius() * normal;
 		glm::vec3 relativeVel = dVelocity;
 		float invMass = 1 / GetMass();
 		
-		glm::vec3 colliderVel = glm::vec3(0.0f, 0.0f, 0.0f); //Floor has no velocity, as it is stationary
+		glm::vec3 colliderVel = zeroVector; //Floor has no velocity, as it is stationary
 		float invColliderMass = 0.0f; //Floor should have no mass for the equaton to work
 
-		glm::vec3 normal = glm::vec3(0.0f, 1.0f, 0.0f); // floor normal up
+		float jLin = ECoefficient(elasticity, dVelocity, normal) / (invMass + invColliderMass); //Linear impulse calculation
 
-		float linEcof = glm::dot(-(1.0f + elasticity) * (dVelocity), normal); //Coefficient used in the top half of the linear impulse calculation
-		float jLin = linEcof / (invMass + invColliderMass); //Linear impulse calculation
+		float jAng = ECoefficient(elasticity, relativeVel, normal) / (invMass + invColliderMass + glm::dot(dInertiaTensorInverse * (r1 * normal), normal)); //Angular impulse calculation
 
-		float angEcof = glm::dot(-(1.0f * elasticity) * (relativeVel), normal); //Coefficient used in the top half of the angular impulse calculation
-		float jAng = angEcof / (invMass + invColliderMass + glm::dot(dInertiaTensorInverse * (r1 * normal), normal)); //Angular impulse calculation
-
-		glm::vec3 collisionImpulseForce = (jAng + jLin) * normal / deltaTs; //Calculation for collision impulse force
+		glm::vec3 collisionImpulseForce = CalcCollisionImpulseForce(jLin, jAng, normal); //Calculation for collision impulse force
 		glm::vec3 contactForce = -(dForce) * normal; //Contact force calculation
 
 		glm::vec3 totalForce = contactForce + collisionImpulseForce; //Getting total force
@@ -247,42 +294,120 @@ void DynamicObject::GameObjectCollision(GameObject* otherObject, float deltaTs, 
 		AddForce(totalForce); //Applying total force
 		dVelocity += (collisionImpulseForce / dMass);
 
+		glm::vec3 forwardRelativeVelocity = relativeVel - glm::dot(relativeVel, normal) * normal;
+
+		glm::vec3 forwardRelativeDirection = zeroVector;
+		if (forwardRelativeVelocity != zeroVector)
+		{
+			forwardRelativeDirection = glm::normalize(forwardRelativeVelocity);
+		}
+
+		float multiplier = 0.5f;
+		glm::vec3 frictionDirection = forwardRelativeDirection * -1.0f;
+		glm::vec3 frictionForce = frictionDirection * multiplier * glm::length(contactForce);
+
+		float velocityCheck = glm::length(forwardRelativeVelocity) - (glm::length(frictionForce) / dMass * deltaTs);
+
+		if (velocityCheck > 0.0f)
+		{
+			AddForce(frictionForce);
+		}
+		else
+		{
+			frictionForce = forwardRelativeVelocity * -1.0f;
+			AddForce(frictionForce);
+			dStopped = true;
+		}
+
+		glm::vec3 tempTorque = (glm::cross(r1, contactForce)) + (glm::cross(r1, frictionForce));
+
+		tempTorque.x -= dAngularMomentum.x * 20.0f;
+		tempTorque.z -= dAngularMomentum.z * 20.0f;
+
+		AddTorque(tempTorque);
 	}
 }
 
 void DynamicObject::DynamicObjectCollision(GameObject* otherObject, float deltaTs, float elasticity)
 {
+	glm::vec3 zeroVector = glm::vec3(0.0f, 0.0f, 0.0f);
 	DynamicObject* otherDynamicObj = dynamic_cast<DynamicObject*>(otherObject);
 	glm::vec3 thisObjCentre1 = dPosition + dVelocity * deltaTs;
 	glm::vec3 otherObjCentre1 = otherDynamicObj->GetPosition() + otherDynamicObj->GetVelocity() * deltaTs;
 	float radius1 = GetBoundingRadius();
 	float radius2 = otherDynamicObj->GetBoundingRadius();
-	glm::vec3 cp;
+	glm::vec3 contactPoint;
 
-	bool collision = PFG::SphereToSphereCollision(thisObjCentre1, otherObjCentre1, radius1, radius2, cp);
+	bool collision = PFG::SphereToSphereCollision(thisObjCentre1, otherObjCentre1, radius1, radius2, contactPoint);
 
 	if (collision)
 	{
-
-		std::cout << "Collided with sphere" << std::endl;
-
 		glm::vec3 ColliderVel = otherDynamicObj->GetVelocity();
 		glm::vec3 relativeVel = dVelocity - ColliderVel;
 		glm::vec3 normal = glm::normalize(thisObjCentre1 - otherObjCentre1);
 
+		glm::vec3 r1 = GetBoundingRadius() * normal;
+
 		glm::vec3 contactPosition = radius1 * normal;
-		float eCof = -(1.0f + elasticity) * glm::dot(relativeVel, normal);
+
 		float invMass = 1 / GetMass();
 		float invColliderMass = 1 / otherDynamicObj->GetMass();
-		float jLin = eCof / (invMass + invColliderMass);
 
-		glm::vec3 collision_impulse_force = jLin * normal / deltaTs;
+		float jLin = ECoefficient(elasticity, relativeVel, normal) / (invMass + invColliderMass);
+
+		float jAng = ECoefficient(elasticity, relativeVel, normal) / (invMass + invColliderMass + glm::dot(dInertiaTensorInverse * (r1 * normal), normal)); 
+
+		glm::vec3 collisionImpulseForce = CalcCollisionImpulseForce(jLin, jAng, normal);
 
 		glm::vec3 acceleration = dForce / dMass + otherDynamicObj->GetMass();
-		//glm::vec3 contact_force = glm::vec3(0.0f, 9.81f * _mass, 0.0f);
-		glm::vec3 contact_force = dForce - dMass * acceleration;
-		glm::vec3 total_force = contact_force + collision_impulse_force;
+		glm::vec3 contactForce = dForce - dMass * acceleration;
+		glm::vec3 totalForce = contactForce + collisionImpulseForce;
 
-		AddForce(total_force);
+		AddForce(totalForce);
+		dVelocity += (collisionImpulseForce / dMass);
+
+		glm::vec3 forwardRelativeVelocity = relativeVel - glm::dot(relativeVel, normal) * normal;
+
+		glm::vec3 forwardRelativeDirection = zeroVector;
+		if (forwardRelativeVelocity != zeroVector)
+		{
+			forwardRelativeDirection = glm::normalize(forwardRelativeVelocity);
+		}
+
+		float multiplier = 0.5f;
+		glm::vec3 frictionDirection = forwardRelativeDirection * -1.0f;
+		glm::vec3 frictionForce = frictionDirection * multiplier * glm::length(contactForce);
+
+		float velocityCheck = glm::length(forwardRelativeVelocity) - (glm::length(frictionForce) / dMass * deltaTs);
+
+		if (velocityCheck > 0.0f)
+		{
+			AddForce(frictionForce);
+		}
+		else
+		{
+			frictionForce = forwardRelativeVelocity * -1.0f;
+			AddForce(frictionForce);
+			dStopped = true;
+		}
+
+		glm::vec3 tempTorque = (glm::cross(r1, contactForce)) + (glm::cross(r1, frictionForce));
+
+		tempTorque.x -= dAngularMomentum.x * 20.0f;
+		tempTorque.z -= dAngularMomentum.z * 20.0f;
+
+		AddTorque(tempTorque);
 	}
+}
+
+float DynamicObject::ECoefficient(float elasticity, glm::vec3 velocity, glm::vec3 normal)
+{
+	float result = glm::dot(-(1.0f + elasticity) * (velocity), normal);
+	return result;
+}
+
+glm::vec3 DynamicObject::CalcCollisionImpulseForce(float linear, float angular, glm::vec3 normal)
+{
+	glm::vec3 result = (angular + linear) * normal;
+	return result;
 }

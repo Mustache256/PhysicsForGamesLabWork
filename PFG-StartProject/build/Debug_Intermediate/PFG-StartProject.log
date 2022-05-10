@@ -1,3 +1,3 @@
-﻿  DynamicObject.cpp
-\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\DynamicObject.cpp(132,24): warning C4305:  'initializing': truncation from 'double' to 'float'
+﻿  Application.cpp
+\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Application.cpp(167,19): warning C4244:  'argument': conversion from 'double' to 'float', possible loss of data
   PFG-StartProject.vcxproj -> \\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\build\Debug\PFG-StartProject.exe
