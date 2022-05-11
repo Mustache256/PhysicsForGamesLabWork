@@ -62,7 +62,7 @@ public:
 
 	 void GameObjectCollision(GameObject* otherObject, float deltaTs, float elasticity);
 
-	 void DynamicObjectCollision(GameObject* otherObejct, float deltaTs, float elasticity);
+	 void DynamicObjectCollision(GameObject* otherObject, float deltaTs, float elasticity);
 
 	/** Set force for the object
 	* @param glm::vec3 force a 3D vector for the force acting on the object

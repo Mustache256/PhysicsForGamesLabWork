@@ -1,3 +1,14 @@
-﻿  DynamicObject.cpp
-\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\DynamicObject.cpp(247,24): warning C4305:  'initializing': truncation from 'double' to 'float'
+﻿  Application.cpp
+  DynamicObject.cpp
+  Scene.cpp
+\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Application.cpp(167,19): warning C4244:  'argument': conversion from 'double' to 'float', possible loss of data
+\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(99,20): warning C4018:  '<': signed/unsigned mismatch
+\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(119,21): warning C4018:  '<': signed/unsigned mismatch
+\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(124,20): warning C4018:  '<': signed/unsigned mismatch
+\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(126,21): warning C4018:  '<': signed/unsigned mismatch
+\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(142,20): warning C4018:  '<': signed/unsigned mismatch
+\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(156,20): warning C4018:  '<': signed/unsigned mismatch
+  Utility.cpp
+  Generating Code...
+\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(161,20): warning C4018:  '<': signed/unsigned mismatch
   PFG-StartProject.vcxproj -> \\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\build\Debug\PFG-StartProject.exe

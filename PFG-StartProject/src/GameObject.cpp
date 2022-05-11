@@ -10,11 +10,11 @@
 GameObject::GameObject()
 {
 	// Initialise everything here
-	_mesh = NULL;
-	_material = NULL;
+	gMesh = NULL;
+	gMaterial = NULL;
 	// Set default value
-	_scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+	gScale = glm::vec3(1.0f, 1.0f, 1.0f);
+	gRotation = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 GameObject::~GameObject()
@@ -28,42 +28,42 @@ void GameObject::Update( float deltaTs )
 	// Make sure matrices are up to date (if you don't change them elsewhere, you can put this in the update function)
 	//_modelMatrix = glm::rotate(_modelMatrix, _rotation.y, glm::vec3(0,1,0) );
 	//_invModelMatrix = glm::rotate(glm::mat4(1.0f), -_rotation.y, glm::vec3(0,1,0) );
-	dModelMatrix = glm::translate(glm::mat4(1.0f), _position);
-	dModelMatrix = glm::scale(dModelMatrix, _scale);
-	dModelMatrix = glm::rotate(dModelMatrix, _rotation.x, glm::vec3(1, 0, 0));
-	dInvModelMatrix = glm::inverse(dModelMatrix);
-	dModelMatrix = glm::rotate(dModelMatrix, _rotation.y, glm::vec3(0, 1, 0));
-	dInvModelMatrix = glm::inverse(dModelMatrix);
-	dModelMatrix = glm::rotate(dModelMatrix, _rotation.z, glm::vec3(0, 0, 1));
-	dInvModelMatrix = glm::inverse(dModelMatrix);
+	modelMatrix = glm::translate(glm::mat4(1.0f), gPosition);
+	modelMatrix = glm::scale(modelMatrix, gScale);
+	modelMatrix = glm::rotate(modelMatrix, gRotation.x, glm::vec3(1, 0, 0));
+	invModelMatrix = glm::inverse(modelMatrix);
+	modelMatrix = glm::rotate(modelMatrix, gRotation.y, glm::vec3(0, 1, 0));
+	invModelMatrix = glm::inverse(modelMatrix);
+	modelMatrix = glm::rotate(modelMatrix, gRotation.z, glm::vec3(0, 0, 1));
+	invModelMatrix = glm::inverse(modelMatrix);
 }
 
 void GameObject::Draw(glm::mat4 &viewMatrix, glm::mat4 &projMatrix)
 {
-	if( _mesh != NULL )
+	if( gMesh != NULL )
 	{
-		if( _material != NULL )
+		if( gMaterial != NULL )
 		{
 			// Give all the matrices to the material
 
 			// This makes sure they are sent to the shader
-			_material->SetMatrices(dModelMatrix, dInvModelMatrix, viewMatrix, projMatrix);
+			gMaterial->SetMatrices(modelMatrix, invModelMatrix, viewMatrix, projMatrix);
 			// This activates the shader
-			_material->Apply();
+			gMaterial->Apply();
 		}
 
 		// Sends the mesh data down the pipeline
-		_mesh->Draw();
+		gMesh->Draw();
 
 	}
 }
 
 void GameObject::SetType(int type)
 {
-	m_objectType = type;
+	gObjectType = type;
 }
 
 int GameObject::GetType()
 {
-	return m_objectType;
+	return gObjectType;
 }

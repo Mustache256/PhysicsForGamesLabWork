@@ -12,12 +12,12 @@ Scene::Scene()
 	
 	// Set up your scene here......
 	// Set a camera
-	_camera = new Camera();
+	camera = new Camera();
 	// Don't start simulation yet
-	_simulation_start = false;
+	simulationStart = false;
 
 	// Position of the light, in world-space
-	_lightPosition = glm::vec3(10, 10, 0);
+	lightPosition = glm::vec3(10, 10, 0);
 
 	// Create the material for the game object- level
 	Material *gameObjectMaterial = new Material();
@@ -33,7 +33,7 @@ Scene::Scene()
 	gameObjectMaterial->SetTexture("assets/textures/diffuse.bmp");
 	// Need to tell the material the light's position
 	// If you change the light's position you need to call this again
-	gameObjectMaterial->SetLightPosition(_lightPosition);
+	gameObjectMaterial->SetLightPosition(lightPosition);
 	// Tell the level object to use this material
 
 	// The mesh is the geometry for the object
@@ -55,7 +55,7 @@ Scene::Scene()
 	dynamObjectMaterial->SetTexture("assets/textures/default.bmp");
 	// Need to tell the material the light's position
 	// If you change the light's position you need to call this again
-	dynamObjectMaterial->SetLightPosition(_lightPosition);
+	dynamObjectMaterial->SetLightPosition(lightPosition);
 	// Tell the level object to use this material
 
 	// Set the geometry for the object
@@ -69,9 +69,9 @@ Scene::Scene()
 	//{
 		for (int i = 0; i < 3; i++)
 		{
-			DynamicObject* newObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(std::stof(_fileInput.at(0)) + i, std::stof(_fileInput.at(1)), std::stof(_fileInput.at(2))), glm::vec3(std::stof(_fileInput.at(3)), std::stof(_fileInput.at(4)), std::stof(_fileInput.at(5))), std::stof(_fileInput.at(6)), std::stof(_fileInput.at(7)));
+			DynamicObject* newObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(std::stof(fileInput.at(0)) + i, std::stof(fileInput.at(1)), std::stof(fileInput.at(2))), glm::vec3(std::stof(fileInput.at(3)), std::stof(fileInput.at(4)), std::stof(fileInput.at(5))), std::stof(fileInput.at(6)), std::stof(fileInput.at(7)));
 
-			_sceneDynamicObjects.push_back(newObj);
+			sceneDynamicObjects.push_back(newObj);
 		}
 	//}
 	/*for (int j = 0; j < 2; j++)
@@ -86,26 +86,25 @@ Scene::Scene()
 
 	GameObject* newGameObj = CreatePlane(gameObjectMaterial, gameObjectMesh, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f, 1.0f, 4.0f));
 
-	_sceneGameObjects.push_back(newGameObj);
+	sceneGameObjects.push_back(newGameObj);
 
 	DynamicObject* newDynamObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(0.2f, 25.0f, 0.0f), glm::vec3(0.3f, 0.3f, 0.3f), 2.0f, 0.3f);
 
-	_sceneDynamicObjects.push_back(newDynamObj);
+	sceneDynamicObjects.push_back(newDynamObj);
 }
 
 Scene::~Scene()
 {
 	// You should neatly clean everything up here
-	for (int i = 0; i < _sceneDynamicObjects.size(); i++)
+	for (int i = 0; i < sceneDynamicObjects.size(); i++)
 	{
-		delete _sceneDynamicObjects.at(i);
+		delete sceneDynamicObjects.at(i);
 	}
-	for (size_t i = 0; i < _sceneGameObjects.size(); i++)
+	for (size_t i = 0; i < sceneGameObjects.size(); i++)
 	{
-		delete _sceneGameObjects.at(i);
+		delete sceneGameObjects.at(i);
 	}
-	delete _level;
-	delete _camera;
+	delete camera;
 }
 
 void Scene::Update(float deltaTs, Input* input)
@@ -113,23 +112,22 @@ void Scene::Update(float deltaTs, Input* input)
 	// Update the game object (this is currently hard-coded motion)
 	if (input->cmd_x)
 	{
-		_simulation_start = true;
+		simulationStart = true;
 	}
-	if (_simulation_start == true)
+	if (simulationStart == true)
 	{
-		for (int i = 0; i < _sceneDynamicObjects.size(); i++)
+		for (int i = 0; i < sceneDynamicObjects.size(); i++)
 		{
-			_sceneDynamicObjects.at(i)->StartSimulation(_simulation_start);
+			sceneDynamicObjects.at(i)->StartSimulation(simulationStart);
 		}
 	}
-	for (int i = 0; i < _sceneDynamicObjects.size(); i++)
+	for (int i = 0; i < sceneDynamicObjects.size(); i++)
 	{
-		for (size_t j = 0; j < _sceneGameObjects.size(); j++)
+		for (int k = 0; k < sceneGameObjects.size(); k++)
 		{
-		  	//_sceneDynamicObjects.at(i)->Update(_sceneGameObjects.at(j), deltaTs / 6);
-			_sceneDynamicObjects.at(i)->Update(_sceneGameObjects.at(j), deltaTs / 6);
+			sceneDynamicObjects.at(i)->Update(sceneGameObjects.at(k), deltaTs / 6);
 		}
-		for (size_t k = 0; k < _sceneDynamicObjects.size(); k++)
+		for (size_t k = 0; k < sceneDynamicObjects.size(); k++)
 		{
 			if (k == i)
 			{
@@ -137,33 +135,32 @@ void Scene::Update(float deltaTs, Input* input)
 			}
 			else
 			{
-				//_sceneDynamicObjects.at(i)->Update(_sceneDynamicObjects.at(k), deltaTs / 9);
-				_sceneDynamicObjects.at(i)->Update(_sceneDynamicObjects.at(k), deltaTs / 9);
+				sceneDynamicObjects.at(i)->Update(sceneDynamicObjects.at(k), deltaTs / 9);
 			}
 		}
 	}
-	for (int j = 0; j < _sceneGameObjects.size(); j++)
+	for (int j = 0; j < sceneGameObjects.size(); j++)
 	{
-		_sceneGameObjects.at(j)->Update(deltaTs);
+		sceneGameObjects.at(j)->Update(deltaTs);
 	}
-	_camera->Update(input);
+	camera->Update(input);
 
-	_viewMatrix = _camera->GetView();
-	_projMatrix = _camera->GetProj();												
+	viewMatrix = camera->GetView();
+	projMatrix = camera->GetProj();												
 }
 
 void Scene::Draw()
 {
 	// Draw objects, giving the camera's position and projection
 
-	for (int i = 0; i < _sceneDynamicObjects.size(); i++)
+	for (int i = 0; i < sceneDynamicObjects.size(); i++)
 	{
-		_sceneDynamicObjects.at(i)->Draw(_viewMatrix, _projMatrix);
+		sceneDynamicObjects.at(i)->Draw(viewMatrix, projMatrix);
 	}
 
-	for (int j = 0; j < _sceneGameObjects.size(); j++)
+	for (int j = 0; j < sceneGameObjects.size(); j++)
 	{
-		_sceneGameObjects.at(j)->Draw(_viewMatrix, _projMatrix);
+		sceneGameObjects.at(j)->Draw(viewMatrix, projMatrix);
 	}
 }
 
@@ -206,7 +203,7 @@ void Scene::fileRead(std::string fileName)
 			std::cout << line << std::endl;
 			fileString += line + "\n";
 
-			_fileInput.push_back(line);
+			fileInput.push_back(line);
 		}
 	}
 	else

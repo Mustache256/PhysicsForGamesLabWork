@@ -2,44 +2,44 @@
 
 namespace PFG
 {
-	float DistanceToPlane(const glm::vec3& n, const glm::vec3& p, const glm::vec3& q)
+	float DistanceToPlane(const glm::vec3& normal, const glm::vec3& centerPoint, const glm::vec3& q)
 	{
-		float d = glm::dot((p - q), n);
+		float d = glm::dot((centerPoint - q), normal);
 		return d;
 	}
 
-	bool MovingSphereToPlaneCollision(const glm::vec3& n, const glm::vec3& c0, const glm::vec3& c1, const glm::vec3& q, float r, glm::vec3& ci)
+	bool MovingSphereToPlaneCollision(const glm::vec3& normal, const glm::vec3& centerPoint1, const glm::vec3& centerPoint2, const glm::vec3& q, float radius, glm::vec3& contactPoint)
 	{
 		float t;
 
-		float d0 = DistanceToPlane(n, c0, q);
-		float d1 = DistanceToPlane(n, c1, q);
+		float distance0 = DistanceToPlane(normal, centerPoint1, q);
+		float distance1 = DistanceToPlane(normal, centerPoint2, q);
 
-		if (glm::abs(d0) <= r)
+		if (glm::abs(distance0) <= radius)
 		{
-			ci = c0;
+			contactPoint = centerPoint1;
 			t = 0.0f;
 			return true;
 		}
-		if (d0 > r && d1 < r)
+		if (distance0 > radius && distance1 < radius)
 		{
-			t = (d0 - r) / (d0 - d1);
-			ci = (1 - t) * c0 + t * c1;
+			t = (distance0 - radius) / (distance0 - distance1);
+			contactPoint = (1 - t) * centerPoint1 + t * centerPoint2;
 			return true;
 		}
 		return false;
 	}
 
 
-	bool SphereToSphereCollision(const glm::vec3& c0, const glm::vec3 c1, float r1, float r2, glm::vec3& cp)
+	bool SphereToSphereCollision(const glm::vec3& centerPoint1, const glm::vec3 centerPoint2, float radius1, float radius2, glm::vec3& contactPoint)
 	{
-		float d = glm::length(c0 - c1);
-		glm::vec3 n;
+		float distance = glm::length(centerPoint1 - centerPoint2);
+		glm::vec3 normal;
 
-		if (d <= (r1 + r2))
+		if (distance <= (radius1 + radius2))
 		{
-			n = glm::normalize(c0 - c1);
-			cp = r1 * n;
+			normal = glm::normalize(centerPoint1 - centerPoint2);
+			contactPoint = radius1 * normal;
 
 			return true;
 		}

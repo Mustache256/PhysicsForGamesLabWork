@@ -39,7 +39,7 @@ void KinematicsObject::Update(float deltaTs)
 
 void KinematicsObject::UpdateModelMatrix()
 {
-	dModelMatrix = glm::translate(glm::mat4(1), _position);
-	dModelMatrix = glm::scale(dModelMatrix, _scale);
-	dInvModelMatrix = glm::inverse(dModelMatrix);
+	modelMatrix = glm::translate(glm::mat4(1), _position);
+	modelMatrix = glm::scale(modelMatrix, _scale);
+	invModelMatrix = glm::inverse(modelMatrix);
 }

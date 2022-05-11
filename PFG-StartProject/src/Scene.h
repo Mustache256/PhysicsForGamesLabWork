@@ -36,7 +36,7 @@ public:
 	* Call this function to get a pointer to the camera
 	* 
 	*/
-    Camera* GetCamera() { return _camera; }
+    Camera* GetCamera() { return camera; }
 
 	/** Draw the scene from the camera's point of view
 	*
@@ -65,30 +65,30 @@ private:
 	GameObject* _level; 
 	/** The main camera in the scene 
 	*/
-	Camera* _camera; 
+	Camera* camera; 
 
 	/**The position for a light that lits the scene
 	*/
-	glm::vec3 _lightPosition; 
+	glm::vec3 lightPosition; 
 	/** This matrix represents the camera's position and orientation 
 	*/
-	glm::mat4 _viewMatrix; 
+	glm::mat4 viewMatrix; 
 	/** This matrix is the camera's lens
 	*/
-	glm::mat4 _projMatrix; 
+	glm::mat4 projMatrix; 
 	/** A boolen variable to control the start of the simulation This matrix is the camera's lens
 	*/
-	bool _simulation_start;
+	bool simulationStart;
 	//Temp variable for Exercise 5: Use kinematics equations to compute free fall
 	//glm::vec3 _v_i; 
 
-	std::vector<DynamicObject*> _sceneDynamicObjects;
+	std::vector<DynamicObject*> sceneDynamicObjects;
 
-	std::vector<GameObject*> _sceneGameObjects;
+	std::vector<GameObject*> sceneGameObjects;
 
 	void fileRead(std::string fileName);
 
-	std::vector<std::string> _fileInput;
+	std::vector<std::string> fileInput;
 };
 
 #endif // !_SCENE_H_
