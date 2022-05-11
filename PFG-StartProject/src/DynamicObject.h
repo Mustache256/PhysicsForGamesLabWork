@@ -32,6 +32,11 @@ public:
 	*   @param float deltaTs simulation time step length
 	*/
 	virtual void Update(GameObject* otherObj, float deltaTs);
+	//virtual void UpdateBefore(float deltaTs);
+
+	//virtual void CollisionUpdate(GameObject* otherObj, float deltaTs);
+
+	//virtual void UpdateAfter(float deltaTs);
 
 	/** Add force that acts on the object to the total force for physics computation
 	*  

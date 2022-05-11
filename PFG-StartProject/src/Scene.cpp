@@ -64,27 +64,24 @@ Scene::Scene()
 	dynamObjectMesh->LoadOBJ("assets/models/sphere.obj");
 
 	fileRead("objFile1.txt");
-	
-	for (int i = 0; i < 3; i++)
-	{
-		DynamicObject* newObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(std::stof(_fileInput.at(0)) + i, std::stof(_fileInput.at(1)), std::stof(_fileInput.at(2))), glm::vec3(std::stof(_fileInput.at(3)), std::stof(_fileInput.at(4)), std::stof(_fileInput.at(5))), std::stof(_fileInput.at(6)), std::stof(_fileInput.at(7)));
 
-		_sceneDynamicObjects.push_back(newObj);
-	}
-	
+	//for (int j = 0; j < 3; j++)
+	//{
+		for (int i = 0; i < 3; i++)
+		{
+			DynamicObject* newObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(std::stof(_fileInput.at(0)) + i, std::stof(_fileInput.at(1)), std::stof(_fileInput.at(2))), glm::vec3(std::stof(_fileInput.at(3)), std::stof(_fileInput.at(4)), std::stof(_fileInput.at(5))), std::stof(_fileInput.at(6)), std::stof(_fileInput.at(7)));
 
+			_sceneDynamicObjects.push_back(newObj);
+		}
+	//}
 	/*for (int j = 0; j < 2; j++)
 	{
-		GameObject* newGameObj = CreatePlane(gameObjectMaterial, gameObjectMesh, glm::vec3(0.0f + j * 10, 0.0f, 0.0f), glm::vec3(3.141590f, 0.0f, 0.0f));
+		for (int i = 0; i < 2; i++)
+		{
+			DynamicObject* newDynamObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(0.2f + i, 25.0f, 0.0f + j), glm::vec3(0.3f, 0.3f, 0.3f), 2.0f, 0.3f);
 
-		_sceneGameObjects.push_back(newGameObj);
-	}
-
-	for (int i = 0; i < 2; i++)
-	{
-		GameObject* newGameObj = CreatePlane(gameObjectMaterial, gameObjectMesh, glm::vec3(0.0f + i * 10, 0.0f, 10.0f), glm::vec3(3.141590f, 0.0f, 0.0f));
-
-		_sceneGameObjects.push_back(newGameObj);
+			_sceneDynamicObjects.push_back(newDynamObj);
+		}
 	}*/
 
 	GameObject* newGameObj = CreatePlane(gameObjectMaterial, gameObjectMesh, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f, 1.0f, 4.0f));
@@ -129,6 +126,7 @@ void Scene::Update(float deltaTs, Input* input)
 	{
 		for (size_t j = 0; j < _sceneGameObjects.size(); j++)
 		{
+		  	//_sceneDynamicObjects.at(i)->Update(_sceneGameObjects.at(j), deltaTs / 6);
 			_sceneDynamicObjects.at(i)->Update(_sceneGameObjects.at(j), deltaTs / 6);
 		}
 		for (size_t k = 0; k < _sceneDynamicObjects.size(); k++)
@@ -139,6 +137,7 @@ void Scene::Update(float deltaTs, Input* input)
 			}
 			else
 			{
+				//_sceneDynamicObjects.at(i)->Update(_sceneDynamicObjects.at(k), deltaTs / 9);
 				_sceneDynamicObjects.at(i)->Update(_sceneDynamicObjects.at(k), deltaTs / 9);
 			}
 		}
