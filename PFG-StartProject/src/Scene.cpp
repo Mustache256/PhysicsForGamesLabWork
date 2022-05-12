@@ -65,37 +65,29 @@ Scene::Scene()
 
 	fileRead("objFile1.txt");
 
-	//for (int j = 0; j < 3; j++)
-	//{
-		for (int i = 0; i < 3; i++)
-		{
-			DynamicObject* newObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(std::stof(fileInput.at(0)) + i, std::stof(fileInput.at(1)), std::stof(fileInput.at(2))), glm::vec3(std::stof(fileInput.at(3)), std::stof(fileInput.at(4)), std::stof(fileInput.at(5))), std::stof(fileInput.at(6)), std::stof(fileInput.at(7)));
-
-			sceneDynamicObjects.push_back(newObj);
-		}
-	//}
-	/*for (int j = 0; j < 2; j++)
+	//For loops used to create all the dynamic objects that appear in the scene
+	for (int k = 0; k < 6; k += 2)
 	{
-		for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 6; j += 2)
 		{
-			DynamicObject* newDynamObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(0.2f + i, 25.0f, 0.0f + j), glm::vec3(0.3f, 0.3f, 0.3f), 2.0f, 0.3f);
+			for (int i = 0; i < 6; i += 2)
+			{
+				DynamicObject* newObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(std::stof(fileInput.at(0)) + i, std::stof(fileInput.at(1)) + j, std::stof(fileInput.at(2)) + k), glm::vec3(std::stof(fileInput.at(3)), std::stof(fileInput.at(4)), std::stof(fileInput.at(5))), std::stof(fileInput.at(6)), std::stof(fileInput.at(7)));
 
-			_sceneDynamicObjects.push_back(newDynamObj);
+				sceneDynamicObjects.push_back(newObj);
+			}
 		}
-	}*/
+	}
 
+	//Creating the plane GameObejct
 	GameObject* newGameObj = CreatePlane(gameObjectMaterial, gameObjectMesh, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f, 1.0f, 4.0f));
 
 	sceneGameObjects.push_back(newGameObj);
-
-	DynamicObject* newDynamObj = CreateSphere(dynamObjectMaterial, dynamObjectMesh, glm::vec3(0.2f, 25.0f, 0.0f), glm::vec3(0.3f, 0.3f, 0.3f), 2.0f, 0.3f);
-
-	sceneDynamicObjects.push_back(newDynamObj);
 }
 
 Scene::~Scene()
 {
-	// You should neatly clean everything up here
+	//For loops used to delete all the Gameobjects and DynamicObjects within the scene
 	for (int i = 0; i < sceneDynamicObjects.size(); i++)
 	{
 		delete sceneDynamicObjects.at(i);
@@ -104,6 +96,7 @@ Scene::~Scene()
 	{
 		delete sceneGameObjects.at(i);
 	}
+	//Deleting the camera object
 	delete camera;
 }
 
@@ -116,16 +109,18 @@ void Scene::Update(float deltaTs, Input* input)
 	}
 	if (simulationStart == true)
 	{
+		//Start the simulation for all the DynamicObjects 
 		for (int i = 0; i < sceneDynamicObjects.size(); i++)
 		{
 			sceneDynamicObjects.at(i)->StartSimulation(simulationStart);
 		}
 	}
+	//For loops that update all the objects within the scene, the loops exist to compare collision between every object within the scene
 	for (int i = 0; i < sceneDynamicObjects.size(); i++)
 	{
 		for (int k = 0; k < sceneGameObjects.size(); k++)
 		{
-			sceneDynamicObjects.at(i)->Update(sceneGameObjects.at(k), deltaTs / 6);
+			sceneDynamicObjects.at(i)->Update(sceneGameObjects.at(k), deltaTs / (sceneGameObjects.size() * 6)); //Division used here as a hacky solution to the issue of each object updating multiple times per tick
 		}
 		for (size_t k = 0; k < sceneDynamicObjects.size(); k++)
 		{
@@ -135,7 +130,7 @@ void Scene::Update(float deltaTs, Input* input)
 			}
 			else
 			{
-				sceneDynamicObjects.at(i)->Update(sceneDynamicObjects.at(k), deltaTs / 9);
+				sceneDynamicObjects.at(i)->Update(sceneDynamicObjects.at(k), deltaTs / (sceneDynamicObjects.size() * 2));//Division used here as a hacky solution to the issue of each object updating multiple times per tick
 			}
 		}
 	}
@@ -143,8 +138,10 @@ void Scene::Update(float deltaTs, Input* input)
 	{
 		sceneGameObjects.at(j)->Update(deltaTs);
 	}
+	//Updating the camera
 	camera->Update(input);
 
+	//Updating the camera's view and projection matrices
 	viewMatrix = camera->GetView();
 	projMatrix = camera->GetProj();												
 }
@@ -166,6 +163,7 @@ void Scene::Draw()
 
 DynamicObject* Scene::CreateSphere(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 scale, float mass, float boundingRadius)
 {
+	//Create a new DynamicObject and set all its default values to the variables that are being passed into the function
 	DynamicObject* dObject = new DynamicObject();
 	dObject->SetMaterial(mat);
 	dObject->SetMesh(modelMesh);
@@ -174,12 +172,13 @@ DynamicObject* Scene::CreateSphere(Material* mat, Mesh* modelMesh, glm::vec3 pos
 	dObject->SetMass(mass);
 	dObject->SetBoundingRadius(boundingRadius);
 	dObject->SetType(1);
-
+	//Return the newly created object
 	return dObject;
 }
 
 GameObject* Scene::CreatePlane(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
 {
+	//Create a new GameObject and set all its default values to the variables that are being passed into the function
 	GameObject* gObject = new GameObject();
 	gObject->SetMaterial(mat);
 	gObject->SetMesh(modelMesh);
@@ -187,15 +186,17 @@ GameObject* Scene::CreatePlane(Material* mat, Mesh* modelMesh, glm::vec3 positio
 	gObject->SetRotation(rotation.x, rotation.y, rotation.z);
 	gObject->SetScale(scale.x, scale.y, scale.z);
 	gObject->SetType(0);
-
+	//Return the newly created object
 	return gObject;
 }
 
 void Scene::fileRead(std::string fileName)
 {
+	//Defining loacal variables
 	std::string line;
 	std::string fileString;
 	std::ifstream fileRead(fileName);
+	//Read from the file ine by line and push the readings into the file input vector (only do this whilst the file is open)
 	if (fileRead.is_open())
 	{
 		while (getline(fileRead, line))
@@ -206,10 +207,12 @@ void Scene::fileRead(std::string fileName)
 			fileInput.push_back(line);
 		}
 	}
+	//Error catching
 	else
 	{
 		std::cout << "File unable to open" << std::endl;
 	}
+	//Close the file
 	fileRead.close();
 }
 

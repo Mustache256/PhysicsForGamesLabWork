@@ -44,12 +44,16 @@ public:
 	*/
 	void AddForce(const glm::vec3 force) { dForce += force; }
 
+	//Function that updates the torque of the object
 	void AddTorque(glm::vec3 torque) { dTorque += torque; }
 
+	//Function that clears the objects force
 	void ClearForces() { dForce = glm::vec3(0.0f, 0.0f, 0.0f); }
 
+	//Function that clears the objects torque
 	void ClearTorque() { dTorque = glm::vec3(0.0f, 0.0f, 0.0f); }
-	/** Numerical integration function to compute the current velocity and the current position
+
+	/** Numerical integration functions to compute the current velocity and the current position
 	* based on the velocity and the position of the previous time step
 	*   @param float deltaTs simulation time step length
 	*/
@@ -58,10 +62,11 @@ public:
 	 void RungeKutta4(float deltaTs);
 	 void Verlet(float deltaTs);
 
+	 //Defining collision response function
 	 void CollisionResponse(GameObject* otherObject, float deltaTs);
-
+	 //Defining GameObject collision function
 	 void GameObjectCollision(GameObject* otherObject, float deltaTs, float elasticity);
-
+	 //Defining DynamicObject collision function
 	 void DynamicObjectCollision(GameObject* otherObject, float deltaTs, float elasticity);
 
 	/** Set force for the object
@@ -111,10 +116,14 @@ public:
 	*/
 	const glm::mat4 GetOrientation() const { return dOrientation; }
 
+	//Function that returns object's velocity
 	const glm::vec3 GetVelocity() const { return dVelocity; }
 
+	//Defining inverse inertia tensor calculation function
 	void CalcInverseInertiaTensor();
+	//Defining ECoefficient calculation function
 	float ECoefficient(float elasticity, glm::vec3 velocity, glm::vec3 normal);
+	//Defining impulse force calculation function
 	glm::vec3 CalcCollisionImpulseForce(float linear, float angular, glm::vec3 normal);
 
 	/** A boolean variable to control the start of the simulation This matrix is the camera's lens
@@ -180,6 +189,7 @@ private:
 	*/
 	glm::quat dRotationQuat;
 
+	//Angular velocity matrix (omega star)
 	glm::mat3 dAngVelocityMat;
 
 	/**
@@ -193,6 +203,7 @@ private:
 	*/
 	bool dStart;
 
+	//Boolean that shows whether the object is moving or not
 	bool dStopped;
 };
 

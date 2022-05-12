@@ -43,23 +43,12 @@ public:
 	*/
 	void Draw();
 
+	//Defining function used to create spheres
 	DynamicObject* CreateSphere(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 scale, float mass, float boundingRadius);
-
+	//Defining function used to create planes
 	GameObject* CreatePlane(Material* mat, Mesh* modelMesh, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 
 private:
-
-	/** A physics object
-	*/
-
-	//KinematicsObject* _physics_object;
-	//KinematicsObject* _physics_object2;
-	/*DynamicObject* _dPhysics_Object;
-	DynamicObject* _dPhysics_Object2;
-	DynamicObject* _dPhysics_Object3;
-	DynamicObject* _dPhysics_Object4;*/
-	//GameObject* _physics_object;
-	//GameObject* _physics_object2;
 	/** An example game level in the scene
 	*/
 	GameObject* _level; 
@@ -82,12 +71,16 @@ private:
 	//Temp variable for Exercise 5: Use kinematics equations to compute free fall
 	//glm::vec3 _v_i; 
 
+	//Defining vector used to store all DynamicObjects
 	std::vector<DynamicObject*> sceneDynamicObjects;
 
+	//Defining vector used to store all GameObjects
 	std::vector<GameObject*> sceneGameObjects;
 
+	//Defing fileread fucntion
 	void fileRead(std::string fileName);
 
+	//Defing vector that stores file input
 	std::vector<std::string> fileInput;
 };
 

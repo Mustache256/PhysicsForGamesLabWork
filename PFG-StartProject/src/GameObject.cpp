@@ -9,25 +9,21 @@
 */
 GameObject::GameObject()
 {
-	// Initialise everything here
+	// Set default values formesh, material, rotation and scale
 	gMesh = NULL;
 	gMaterial = NULL;
-	// Set default value
 	gScale = glm::vec3(1.0f, 1.0f, 1.0f);
 	gRotation = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 GameObject::~GameObject()
 {
-	// Do any clean up here
+	
 }
 
 void GameObject::Update( float deltaTs )
 {
-	// Put any update code here
-	// Make sure matrices are up to date (if you don't change them elsewhere, you can put this in the update function)
-	//_modelMatrix = glm::rotate(_modelMatrix, _rotation.y, glm::vec3(0,1,0) );
-	//_invModelMatrix = glm::rotate(glm::mat4(1.0f), -_rotation.y, glm::vec3(0,1,0) );
+	//Set objects scale, position and rotation or each axis based on associated variable values
 	modelMatrix = glm::translate(glm::mat4(1.0f), gPosition);
 	modelMatrix = glm::scale(modelMatrix, gScale);
 	modelMatrix = glm::rotate(modelMatrix, gRotation.x, glm::vec3(1, 0, 0));
@@ -60,10 +56,12 @@ void GameObject::Draw(glm::mat4 &viewMatrix, glm::mat4 &projMatrix)
 
 void GameObject::SetType(int type)
 {
+	//Set the objects type
 	gObjectType = type;
 }
 
 int GameObject::GetType()
 {
+	//Return the objects type
 	return gObjectType;
 }

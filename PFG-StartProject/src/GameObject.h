@@ -52,14 +52,15 @@ public:
 	*/
 	void SetScale(float sX, float sY, float sZ) { gScale.x = sX; gScale.y = sY; gScale.z = sZ; }
 	
+	//Function for setting the objects velocity
+	void SetInitialVelocity(glm::vec3 vel) { gInitialVelocity = vel; }
+
+	//Function for getting the objects velocity
+	glm::vec3 GetInitialVelocity() { return gInitialVelocity; }
+
 	/** Function for getting position of the game object
 	* @return The result
 	*/
-
-	void SetInitialVelocity(glm::vec3 vel) { gInitialVelocity = vel; }
-
-	glm::vec3 GetInitialVelocity() { return gInitialVelocity; }
-
 	glm::vec3 GetPosition() {return gPosition;}
 	
 	/** A virtual function for updating the simulation result at each time frame
@@ -74,12 +75,16 @@ public:
 	*/
 	virtual void Draw(glm::mat4 &viewMatrix, glm::mat4 &projMatrix);
 
+	//Function for setting the objects mass
 	void SetMass(float mass) { gMass = mass; }
 
+	//Function for getting the objects mass
 	float GetMass() { return gMass; }
 
+	//Function for setting the objects type
 	void SetType(int type);
 
+	//Function for getting the objects type
 	int GetType();
 
 protected:
@@ -112,10 +117,13 @@ protected:
 	*/
 	glm::vec3 gScale;
 
+	//The mass of the object
 	float gMass;
 
+	//The type of the object
 	int gObjectType;
 
+	//The velocity of the object
 	glm::vec3 gInitialVelocity;
 };
 
