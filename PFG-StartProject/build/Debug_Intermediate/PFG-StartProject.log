@@ -1,11 +1,27 @@
-﻿  DynamicObject.cpp
+﻿  Application.cpp
+  Camera.cpp
+  DynamicObject.cpp
+  GameObject.cpp
+  Input.cpp
+  KinematicsObject.cpp
+\\bournemouth.ac.uk\data\student\home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Application.cpp(167,19): warning C4244:  'argument': conversion from 'double' to 'float', possible loss of data
+  Main.cpp
+  Material.cpp
+  Mesh.cpp
   Scene.cpp
-\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(91,20): warning C4018:  '<': signed/unsigned mismatch
-\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(113,21): warning C4018:  '<': signed/unsigned mismatch
-\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(119,20): warning C4018:  '<': signed/unsigned mismatch
-\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(121,21): warning C4018:  '<': signed/unsigned mismatch
-\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(137,20): warning C4018:  '<': signed/unsigned mismatch
-\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(153,20): warning C4018:  '<': signed/unsigned mismatch
+\\bournemouth.ac.uk\data\student\home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\KinematicsObject.cpp(25,21): warning C4244:  '=': conversion from 'double' to 'T', possible loss of data
+\\bournemouth.ac.uk\data\student\home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\KinematicsObject.cpp(25,21): warning C4244:         with
+\\bournemouth.ac.uk\data\student\home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\KinematicsObject.cpp(25,21): warning C4244:         [
+\\bournemouth.ac.uk\data\student\home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\KinematicsObject.cpp(25,21): warning C4244:             T=float
+\\bournemouth.ac.uk\data\student\home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\KinematicsObject.cpp(25,21): warning C4244:         ]
+\\bournemouth.ac.uk\data\student\home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(91,20): warning C4018:  '<': signed/unsigned mismatch
+\\bournemouth.ac.uk\data\student\home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(113,21): warning C4018:  '<': signed/unsigned mismatch
+\\bournemouth.ac.uk\data\student\home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(119,20): warning C4018:  '<': signed/unsigned mismatch
+\\bournemouth.ac.uk\data\student\home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(121,21): warning C4018:  '<': signed/unsigned mismatch
+\\bournemouth.ac.uk\data\student\home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(137,20): warning C4018:  '<': signed/unsigned mismatch
+\\bournemouth.ac.uk\data\student\home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(153,20): warning C4018:  '<': signed/unsigned mismatch
+  Utility.cpp
   Generating Code...
-\\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(158,20): warning C4018:  '<': signed/unsigned mismatch
+\\bournemouth.ac.uk\data\student\home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\src\Scene.cpp(158,20): warning C4018:  '<': signed/unsigned mismatch
+  glew.c
   PFG-StartProject.vcxproj -> \\bournemouth.ac.uk\data\Student\Home\SciTech\s5304084\GitHub\PhysicsForGamesLabWork\PFG-StartProject\build\Debug\PFG-StartProject.exe
